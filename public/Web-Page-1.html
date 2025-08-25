@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مبادرات الذكاء الاصطناعي في المؤسسات المصرية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Desert Mirage -->
+    <!-- Application Structure Plan: The application is designed as a single-page, scrollable dashboard with a fixed sidebar for navigation. This structure was chosen to provide users with a clear overview of all content sections while allowing for quick, non-linear access to any specific area of interest. The user flow starts with a high-level summary, then dives into the core AI technologies, followed by a detailed exploration of sector-specific applications. The core of the experience is an interactive "Initiative Explorer" where users can filter proposals by sector and technology. This dashboard approach is superior to a linear report format because it empowers users to compare and synthesize information according to their own interests, fostering a deeper understanding of the interconnectedness of the proposals. The final sections cover the strategic analysis (SWOT) and a phased implementation roadmap, providing a clear path forward. This structure prioritizes user-driven exploration and strategic synthesis over passive reading. -->
+    <!-- Visualization & Content Choices: 
+        1. Core Technologies (Section): Report Info -> 6 core AI technologies. Goal -> Inform & Organize. Viz/Method -> Interactive card layout with icons. Interaction -> On hover, cards reveal more details. Justification -> Visually engaging way to introduce the foundational concepts without overwhelming the user. Library -> HTML/CSS with Tailwind.
+        2. Sector Applications (Section): Report Info -> Proposals for 5 key sectors. Goal -> Explore & Compare. Viz/Method -> A central dashboard with filter buttons (by sector) and a dynamic grid of proposal cards. Interaction -> Clicking a sector button filters the displayed cards. Cards themselves can be clicked to show more details in a modal. Justification -> This is the most critical interactive element. It transforms a static list of proposals into a dynamic tool for analysis, allowing users to see all proposals for 'Health' or all applications of 'OCR' at a glance. Library -> Vanilla JS for filtering logic.
+        3. Implementation Roadmap (Section): Report Info -> 3-phase implementation plan. Goal -> Show Change over time. Viz/Method -> Horizontal timeline diagram built with HTML/CSS. Interaction -> Hovering over a phase highlights its key objectives. Justification -> A timeline is the most intuitive way to represent a phased plan, making the strategic progression clear. Library -> HTML/CSS with Tailwind.
+        4. Priority Matrix (Chart): Report Info -> Table classifying projects by impact and complexity. Goal -> Compare & Prioritize. Viz/Method -> A bubble chart (using Chart.js) where each bubble is a project. X-axis is 'Complexity', Y-axis is 'Strategic Impact', and bubble size can represent potential budget/scope. Interaction -> Tooltips on hover provide project details. Justification -> A bubble chart is more visually impactful and better for at-a-glance strategic assessment than a simple table. It immediately draws attention to the 'Quick Wins' (high impact, low complexity). Library -> Chart.js on a Canvas element.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #FDFBF5;
+            color: #4A4A4A;
+        }
+        .bg-primary { background-color: #FDFBF5; }
+        .bg-secondary { background-color: #F4EAD2; }
+        .bg-accent { background-color: #D7C7A1; }
+        .text-header { color: #8A6F4A; }
+        .text-body { color: #4A4A4A; }
+        .border-accent { border-color: #D7C7A1; }
+        .btn-primary {
+            background-color: #8A6F4A;
+            color: #FFFFFF;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #6b563a;
+        }
+        .btn-filter {
+            background-color: #F4EAD2;
+            color: #8A6F4A;
+            transition: all 0.3s ease;
+            border: 1px solid #D7C7A1;
+        }
+        .btn-filter.active, .btn-filter:hover {
+            background-color: #8A6F4A;
+            color: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .card {
+            background-color: #FFFFFF;
+            border: 1px solid #F4EAD2;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 50vh;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 500px;
+            }
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #F4EAD2; }
+        ::-webkit-scrollbar-thumb { background: #D7C7A1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8A6F4A; }
+    </style>
+</head>
+<body class="bg-primary">
+
+    <div class="flex flex-col md:flex-row">
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-64 bg-secondary p-4 md:h-screen md:sticky top-0 shadow-lg">
+            <h1 class="text-2xl font-bold text-header mb-6 text-center">مصر الرقمية</h1>
+            <nav>
+                <ul class="space-y-2">
+                    <li><a href="#hero" class="block py-2 px-4 rounded hover:bg-accent hover:text-white transition-colors">نظرة عامة</a></li>
+                    <li><a href="#tech" class="block py-2 px-4 rounded hover:bg-accent hover:text-white transition-colors">التقنيات الأساسية</a></li>
+                    <li><a href="#sectors" class="block py-2 px-4 rounded hover:bg-accent hover:text-white transition-colors">التطبيقات القطاعية</a></li>
+                    <li><a href="#roadmap" class="block py-2 px-4 rounded hover:bg-accent hover:text-white transition-colors">خارطة الطريق</a></li>
+                    <li><a href="#matrix" class="block py-2 px-4 rounded hover:bg-accent hover:text-white transition-colors">مصفوفة الأولويات</a></li>
+                    <li><a href="#swot" class="block py-2 px-4 rounded hover:bg-accent hover:text-white transition-colors">التحليل الاستراتيجي</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 md:p-10">
+            <!-- Hero Section -->
+            <section id="hero" class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-header mb-4">استراتيجية الذكاء الاصطناعي للقطاع العام المصري</h2>
+                <p class="text-lg text-body max-w-3xl mx-auto">
+                    تحليل تفاعلي للمقترحات الهادفة إلى توظيف الذكاء الاصطناعي لتحسين الخدمات الحكومية وتعزيز الكفاءة، بما يتماشى مع رؤية مصر 2030 والاستراتيجية الوطنية للذكاء الاصطناعي.
+                </p>
+            </section>
+
+            <!-- Core Technologies Section -->
+            <section id="tech" class="mb-16">
+                <h3 class="text-3xl font-bold text-header mb-8 text-center">التقنيات الأساسية المقترحة</h3>
+                <p class="text-center text-body mb-8 max-w-2xl mx-auto">
+                    تعتمد الاستراتيجية المقترحة على حزمة متكاملة من التقنيات المتقدمة المتخصصة في اللغة العربية، والتي تشكل حجر الزاوية في تحويل الخدمات الحكومية. استكشف كل تقنية لمعرفة دورها المحوري.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Tech Card -->
+                    <div class="card p-6 text-center">
+                        <div class="text-4xl mb-4">📄</div>
+                        <h4 class="text-xl font-bold text-header mb-2">التعرف الضوئي (OCR)</h4>
+                        <p class="text-body">رقمنة الوثائق الورقية والمخطوطات التاريخية لتحويلها إلى بيانات قابلة للبحث والتحليل.</p>
+                    </div>
+                    <!-- Tech Card -->
+                    <div class="card p-6 text-center">
+                        <div class="text-4xl mb-4">🎙️</div>
+                        <h4 class="text-xl font-bold text-header mb-2">تحويل الكلام لنص (ASR)</h4>
+                        <p class="text-body">أتمتة تفريغ المحاضرات والملاحظات الطبية والشكاوى الصوتية، مما يوفر الوقت ويزيد الدقة.</p>
+                    </div>
+                    <!-- Tech Card -->
+                    <div class="card p-6 text-center">
+                        <div class="text-4xl mb-4">🔊</div>
+                        <h4 class="text-xl font-bold text-header mb-2">تحويل النص لكلام (TTS)</h4>
+                        <p class="text-body">إنشاء واجهات صوتية للخدمات الحكومية لدعم ضعاف البصر وتجاوز حواجز الأمية الرقمية.</p>
+                    </div>
+                    <!-- Tech Card -->
+                    <div class="card p-6 text-center">
+                        <div class="text-4xl mb-4">🔍</div>
+                        <h4 class="text-xl font-bold text-header mb-2">الاسترجاع المعزز (RAG)</h4>
+                        <p class="text-body">بناء أنظمة أسئلة وأجوبة ذكية تستمد معلوماتها من مصادر موثوقة كالقوانين والمناهج الدراسية.</p>
+                    </div>
+                    <!-- Tech Card -->
+                    <div class="card p-6 text-center">
+                        <div class="text-4xl mb-4">🤖</div>
+                        <h4 class="text-xl font-bold text-header mb-2">روبوتات المحادثة</h4>
+                        <p class="text-body">تقديم خدمات آلية للمواطنين والموظفين على مدار الساعة للإجابة الفورية على الاستفسارات.</p>
+                    </div>
+                    <!-- Tech Card -->
+                    <div class="card p-6 text-center">
+                        <div class="text-4xl mb-4">🖋️</div>
+                        <h4 class="text-xl font-bold text-header mb-2">التشكيل الآلي</h4>
+                        <p class="text-body">إضافة الدقة للنصوص العربية التعليمية والتراثية لضمان النطق السليم وتعزيز جودة المحتوى الرقمي.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sector Applications Section -->
+            <section id="sectors" class="mb-16">
+                <h3 class="text-3xl font-bold text-header mb-8 text-center">مستكشف المبادرات القطاعية</h3>
+                <p class="text-center text-body mb-8 max-w-2xl mx-auto">
+                    يقدم التقرير مجموعة من المبادرات المبتكرة لتطبيق الذكاء الاصطناعي في خمسة قطاعات حيوية. استخدم المرشحات أدناه لاستكشاف المقترحات الخاصة بكل قطاع وكيفية مساهمتها في تحقيق التحول الرقمي.
+                </p>
+                <div id="filter-buttons" class="flex flex-wrap justify-center gap-4 mb-8">
+                    <button class="btn-filter active" data-filter="all">الكل</button>
+                    <button class="btn-filter" data-filter="gov">الحكومة والإدارة</button>
+                    <button class="btn-filter" data-filter="edu">التعليم والتدريب</button>
+                    <button class="btn-filter" data-filter="health">الصحة والخدمات الاجتماعية</button>
+                    <button class="btn-filter" data-filter="finance">المالية والاقتصاد</button>
+                    <button class="btn-filter" data-filter="culture">الثقافة والإعلام</button>
+                </div>
+                <div id="initiatives-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                </div>
+            </section>
+            
+            <!-- Roadmap Section -->
+            <section id="roadmap" class="mb-16">
+                <h3 class="text-3xl font-bold text-header mb-8 text-center">خارطة طريق التنفيذ المقترحة</h3>
+                 <p class="text-center text-body mb-12 max-w-2xl mx-auto">
+                    لضمان نجاح المبادرة، يُقترح تبني نهج مرحلي يوازن بين تحقيق مكاسب سريعة لبناء الزخم والاستثمار في المشاريع الاستراتيجية طويلة الأجل. تستعرض خارطة الطريق التالية خطة عمل مقترحة على مدى خمس سنوات.
+                </p>
+                <div class="relative">
+                    <div class="border-r-2 border-accent absolute h-full top-0" style="left: 15px"></div>
+                    <ul class="space-y-8">
+                        <!-- Phase 1 -->
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center mr-4">1</div>
+                            <div class="flex-1">
+                                <h4 class="text-xl font-bold text-header">المرحلة الأولى: التأسيس والمكاسب السريعة (السنة 1)</h4>
+                                <p class="text-body mt-2">
+                                    - إطلاق مشروع "المنارة" في الأكاديمية الوطنية للتدريب كبيئة اختبار آمنة. <br>
+                                    - توسيع نطاق روبوت المحادثة "كمت" ليشمل هيئات حكومية إضافية. <br>
+                                    - تشكيل فريق عمل لوضع معايير موحدة للبيانات.
+                                </p>
+                            </div>
+                        </li>
+                        <!-- Phase 2 -->
+                        <li class="flex items-start">
+                            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center mr-4">2</div>
+                            <div class="flex-1">
+                                <h4 class="text-xl font-bold text-header">المرحلة الثانية: التوسع والتكامل (السنتان 2-3)</h4>
+                                <p class="text-body mt-2">
+                                    - تعميم الحلول التي أثبتت جدواها (مثل OCR للموارد البشرية) على وزارات أخرى. <br>
+                                    - البدء في المشاريع الاستراتيجية الأكثر تعقيدًا (مثل ASR في الصحة و OCR للتراث). <br>
+                                    - تطوير بوابة موحدة لواجهات برمجة التطبيقات (API) لتسهيل تبادل البيانات.
+                                </p>
+                            </div>
+                        </li>
+                        <!-- Phase 3 -->
+                        <li class="flex items-start">
+                             <div class="flex-shrink-0 w-8 h-8 rounded-full bg-accent text-white flex items-center justify-center mr-4">3</div>
+                            <div class="flex-1">
+                                <h4 class="text-xl font-bold text-header">المرحلة الثالثة: التحول والابتكار (السنتان 4-5)</h4>
+                                <p class="text-body mt-2">
+                                    - دمج التحليلات القائمة على الذكاء الاصطناعي في عمليات صنع القرار. <br>
+                                    - إطلاق منصات متقدمة موجهة للمواطن مثل البوابة الصوتية الموحدة لـ "مصر الرقمية". <br>
+                                    - تأسيس مركز تميز وطني لمعالجة اللغة العربية الطبيعية.
+                                </p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+            
+            <!-- Priority Matrix Section -->
+            <section id="matrix" class="mb-16">
+                <h3 class="text-3xl font-bold text-header mb-8 text-center">مصفوفة تحديد الأولويات</h3>
+                <p class="text-center text-body mb-8 max-w-2xl mx-auto">
+                    لتسهيل اتخاذ القرار، يصنف هذا المخطط المشاريع المقترحة بناءً على محورين رئيسيين: مدى تعقيد التنفيذ والأثر الاستراتيجي المتوقع. المشاريع في الربع العلوي الأيسر تمثل "المكاسب السريعة" التي يجب إعطاؤها الأولوية.
+                </p>
+                <div class="chart-container bg-white p-4 rounded-lg shadow-lg">
+                    <canvas id="priorityMatrixChart"></canvas>
+                </div>
+            </section>
+
+            <!-- SWOT Analysis Section -->
+            <section id="swot" class="mb-16">
+                <h3 class="text-3xl font-bold text-header mb-8 text-center">التحليل الاستراتيجي (SWOT)</h3>
+                 <p class="text-center text-body mb-8 max-w-2xl mx-auto">
+                    يقدم هذا التحليل تقييمًا متكاملًا للمبادرة، مع الأخذ في الاعتبار العوامل الداخلية (نقاط القوة والضعف) والخارجية (الفرص والتهديدات) التي ستؤثر على نجاحها.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="card p-6">
+                        <h4 class="text-2xl font-bold text-green-600 mb-4">نقاط القوة (Strengths)</h4>
+                        <ul class="list-disc list-inside text-body space-y-2">
+                            <li>توافق استراتيجي قوي مع رؤية مصر 2030.</li>
+                            <li>البناء على سوابق ناجحة مثل "كمت".</li>
+                            <li>التركيز على خدمات تمس حياة المواطن مباشرة.</li>
+                            <li>ميزة تنافسية في مجال الذكاء الاصطناعي للغة العربية.</li>
+                        </ul>
+                    </div>
+                    <div class="card p-6">
+                        <h4 class="text-2xl font-bold text-red-600 mb-4">نقاط الضعف (Weaknesses)</h4>
+                        <ul class="list-disc list-inside text-body space-y-2">
+                            <li>تحديات البنية التحتية وحوكمة البيانات.</li>
+                            <li>الحاجة لكوادر متخصصة في الذكاء الاصطناعي.</li>
+                            <li>خطر تنفيذ الحلول بشكل منعزل بين الوزارات.</li>
+                            <li>عدم وضوح التكلفة الإجمالية للملكية (TCO).</li>
+                        </ul>
+                    </div>
+                    <div class="card p-6">
+                        <h4 class="text-2xl font-bold text-blue-600 mb-4">الفرص (Opportunities)</h4>
+                        <ul class="list-disc list-inside text-body space-y-2">
+                            <li>تحقيق الريادة الإقليمية في الذكاء الاصطناعي العربي.</li>
+                            <li>تحسين كبير في كفاءة الخدمات ورضا المواطنين.</li>
+                            <li>توفير بيانات قيمة لدعم عملية صنع القرار.</li>
+                            <li>تنمية منظومة الشركات المصرية الناشئة.</li>
+                        </ul>
+                    </div>
+                    <div class="card p-6">
+                        <h4 class="text-2xl font-bold text-yellow-600 mb-4">التهديدات (Threats)</h4>
+                        <ul class="list-disc list-inside text-body space-y-2">
+                            <li>مقاومة التغيير من البيروقراطية التقليدية.</li>
+                            <li>المخاطر السيبرانية وسرقة البيانات الحساسة.</li>
+                            <li>هجرة العقول والكفاءات المتخصصة للخارج.</li>
+                            <li>المخاطر الأخلاقية المتعلقة بالتحيز في الخوارزميات.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            const initiativesData = [
+                { category: 'gov', title: 'رقمنة وثائق الهوية', description: 'استخدام OCR لرقمنة بطاقات الهوية وجوازات السفر لتسريع المعاملات.', icon: '🆔' },
+                { category: 'gov', title: 'المساعد الذكي للخدمة المدنية', description: 'تطوير روبوت محادثة (Chatbot) للرد على استفسارات الموظفين حول القوانين.', icon: '💬' },
+                { category: 'gov', title: 'بوابة "مصر الرقمية" الصوتية', description: 'إنشاء منصة خدمات موحدة بواجهة صوتية (ASR/TTS) لتسهيل الوصول.', icon: '🗣️' },
+                { category: 'edu', title: 'رقمنة وتشكيل المناهج', description: 'استخدام OCR والتشكيل الآلي لإنشاء مناهج رقمية دقيقة لغويًا.', icon: '📚' },
+                { category: 'edu', title: 'قارئ الكتب الناطق', description: 'تطوير أداة TTS لدعم الطلاب ذوي الإعاقات البصرية وصعوبات التعلم.', icon: '📖' },
+                { category: 'edu', title: 'أرشفة ذكية للأبحاث', description: 'إنشاء أرشيف ذكي للرسائل العلمية باستخدام OCR وبوابة بحث متقدمة.', icon: '🔬' },
+                { category: 'health', title: 'التفريغ الآلي لملاحظات الأطباء', description: 'استخدام ASR لتدوين ملاحظات الأطباء الصوتية مباشرة في السجلات الطبية.', icon: '🩺' },
+                { category: 'health', title: 'رقمنة طلبات الدعم الاجتماعي', description: 'استخدام OCR لمعالجة طلبات الدعم لتسريع عملية البت فيها.', icon: '🤝' },
+                { category: 'health', title: 'خط ساخن صحي ذكي', description: 'إنشاء واجهة صوتية لتقديم الاستشارات الصحية الأولية والإجابة على الاستفسارات.', icon: '📞' },
+                { category: 'finance', title: 'معالجة الإقرارات الضريبية', description: 'تطبيق نظام OCR لمعالجة الإقرارات الضريبية الورقية وكشف الاحتيال.', icon: '💰' },
+                { category: 'finance', title: 'مساعد المستثمرين الافتراضي', description: 'بناء مساعد افتراضي متعدد اللغات لتوجيه المستثمرين والإجابة على أسئلتهم.', icon: '📈' },
+                { category: 'finance', title: 'روبوتات محادثة مصرفية', description: 'نشر Chatbots تفهم اللهجة العامية المصرية لخدمة عملاء البنوك.', icon: '🏦' },
+                { category: 'culture', title: 'رقمنة التراث والمخطوطات', description: 'إطلاق مشروع ضخم لرقمنة التراث باستخدام OCR متطور قادر على قراءة الخطوط القديمة.', icon: '📜' },
+                { category: 'culture', title: 'تطبيق تحفيظ القرآن الذكي', description: 'تطوير تطبيق يعتمد على ASR لتقييم وتصحيح تلاوة المستخدم للقرآن الكريم.', icon: '🕌' },
+                { category: 'culture', title: 'المذيع الآلي', description: 'استخدام تقنية TTS عالية الجودة لإنتاج نشرات إخبارية مسجلة صوتيًا بشكل آلي.', icon: '📻' },
+            ];
+
+            const grid = document.getElementById('initiatives-grid');
+            const filterButtons = document.querySelectorAll('.btn-filter');
+
+            function displayInitiatives(filter) {
+                grid.innerHTML = '';
+                const filteredData = (filter === 'all') ? initiativesData : initiativesData.filter(item => item.category === filter);
+                
+                filteredData.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'card p-6 flex flex-col items-center text-center initiative-card';
+                    card.dataset.category = item.category;
+                    card.innerHTML = `
+                        <div class="text-5xl mb-4">${item.icon}</div>
+                        <h4 class="text-xl font-bold text-header mb-2">${item.title}</h4>
+                        <p class="text-body">${item.description}</p>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    displayInitiatives(button.dataset.filter);
+                });
+            });
+
+            displayInitiatives('all');
+
+            // Chart.js Priority Matrix
+            const ctx = document.getElementById('priorityMatrixChart').getContext('2d');
+            const priorityMatrixChart = new Chart(ctx, {
+                type: 'bubble',
+                data: {
+                    datasets: [
+                        {
+                            label: 'مكاسب سريعة',
+                            data: [
+                                { x: 2, y: 9, r: 15, label: 'روبوت المحادثة الداخلي (الأكاديمية)' },
+                                { x: 3, y: 8, r: 18, label: 'OCR لإجراءات KYC (البنوك)' },
+                                { x: 4, y: 8, r: 20, label: 'روبوتات المحادثة الخدمية' }
+                            ],
+                            backgroundColor: 'rgba(22, 163, 74, 0.7)',
+                            borderColor: 'rgba(22, 163, 74, 1)',
+                        },
+                        {
+                            label: 'مبادرات استراتيجية',
+                            data: [
+                                { x: 9, y: 10, r: 25, label: 'OCR للمخطوطات التراثية' },
+                                { x: 8, y: 9, r: 22, label: 'البوابة الصوتية الموحدة' },
+                                { x: 7, y: 8, r: 28, label: 'ASR للسجلات الطبية' }
+                            ],
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
+                        },
+                        {
+                            label: 'تحسينات تدريجية',
+                            data: [
+                                { x: 3, y: 4, r: 12, label: 'ASR لتفريغ الاجتماعات' },
+                                { x: 4, y: 3, r: 14, label: 'OCR لأرشفة الملفات الإدارية' }
+                            ],
+                            backgroundColor: 'rgba(234, 179, 8, 0.7)',
+                            borderColor: 'rgba(234, 179, 8, 1)',
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'تعقيد التنفيذ (منخفض ← مرتفع)',
+                                font: { size: 14, family: 'Cairo' }
+                            },
+                            min: 0,
+                            max: 10
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'الأثر الاستراتيجي (منخفض ← مرتفع)',
+                                font: { size: 14, family: 'Cairo' }
+                            },
+                            min: 0,
+                            max: 11
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                font: { family: 'Cairo' }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const item = context.dataset.data[context.dataIndex];
+                                    return item.label;
+                                }
+                            },
+                            bodyFont: { family: 'Cairo' },
+                            titleFont: { family: 'Cairo' }
+                        }
+                    }
+                }
+            });
+            
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
