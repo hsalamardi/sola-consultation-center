@@ -21,6 +21,9 @@ steps:
       - '--platform'
       - 'managed'
       - '--allow-unauthenticated'
+# Send logs only to Cloud Logging
+options:
+  logging: CLOUD_LOGGING_ONLY
 
 images:
   - 'gcr.io/$PROJECT_ID/https-cr'
