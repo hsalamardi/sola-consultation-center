@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الصفحة الرئيسية - الاستشارات التقنية والتدريب</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                'nta-black': '#212529',
+                'nta-red': '#d71920',
+              }
+            }
+          }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #d71920 0%, #212529 100%);
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #d71920;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold text-nta-black">الاستشارات التقنية والتدريب</h1>
+                </div>
+                <div class="hidden md:flex space-x-reverse space-x-8">
+                    <a href="index.html" class="nav-link text-nta-red font-semibold px-3 py-2 rounded-md">الرئيسية</a>
+                    <a href="Cert.html" class="nav-link text-nta-black hover:text-nta-red px-3 py-2 rounded-md">الشهادات</a>
+                    <a href="ai.html" class="nav-link text-nta-black hover:text-nta-red px-3 py-2 rounded-md">الذكاء الاصطناعي</a>
+                    <a href="infra.html" class="nav-link text-nta-black hover:text-nta-red px-3 py-2 rounded-md">البنية التحتية</a>
+                    <a href="init.html" class="nav-link text-nta-black hover:text-nta-red px-3 py-2 rounded-md">المبادرات</a>
+                    <a href="software.html" class="nav-link text-nta-black hover:text-nta-red px-3 py-2 rounded-md">البرمجيات</a>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-nta-black hover:text-nta-red focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 text-nta-red font-semibold">الرئيسية</a>
+                <a href="Cert.html" class="block px-3 py-2 text-nta-black hover:text-nta-red">الشهادات</a>
+                <a href="ai.html" class="block px-3 py-2 text-nta-black hover:text-nta-red">الذكاء الاصطناعي</a>
+                <a href="infra.html" class="block px-3 py-2 text-nta-black hover:text-nta-red">البنية التحتية</a>
+                <a href="init.html" class="block px-3 py-2 text-nta-black hover:text-nta-red">المبادرات</a>
+                <a href="software.html" class="block px-3 py-2 text-nta-black hover:text-nta-red">البرمجيات</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="gradient-bg text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">مرحباً بكم في منصة الاستشارات التقنية</h1>
+            <p class="text-xl md:text-2xl mb-8 opacity-90">نقدم حلولاً متكاملة في التدريب والاستشارات التقنية لبناء مستقبل رقمي متطور</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="bg-white text-nta-red px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">استكشف خدماتنا</button>
+                <button class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-nta-red transition duration-300">تواصل معنا</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Grid -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-nta-black mb-4">خدماتنا المتخصصة</h2>
+                <p class="text-lg text-gray-600">اكتشف مجموعة شاملة من الخدمات التقنية والاستشارية</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Certifications Card -->
+                <div class="card bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="w-16 h-16 bg-nta-red rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-nta-black mb-3">الشهادات المهنية</h3>
+                    <p class="text-gray-600 mb-4">استراتيجية شاملة لبناء القدرات الرقمية والحصول على الشهادات المهنية المعتمدة</p>
+                    <a href="Cert.html" class="inline-flex items-center text-nta-red font-semibold hover:underline">
+                        استكشف المزيد
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </a>
+                </div>
+
+                <!-- AI Card -->
+                <div class="card bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="w-16 h-16 bg-nta-red rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-nta-black mb-3">الذكاء الاصطناعي</h3>
+                    <p class="text-gray-600 mb-4">مبادرات متطورة لتطبيق تقنيات الذكاء الاصطناعي في المؤسسات المصرية</p>
+                    <a href="ai.html" class="inline-flex items-center text-nta-red font-semibold hover:underline">
+                        استكشف المزيد
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </a>
+                </div>
+
+                <!-- Infrastructure Card -->
+                <div class="card bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="w-16 h-16 bg-nta-red rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-nta-black mb-3">البنية التحتية</h3>
+                    <p class="text-gray-600 mb-4">خطط شاملة لاستشارات البنية التحتية والحوسبة السحابية</p>
+                    <a href="infra.html" class="inline-flex items-center text-nta-red font-semibold hover:underline">
+                        استكشف المزيد
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </a>
+                </div>
+
+                <!-- Initiatives Card -->
+                <div class="card bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="w-16 h-16 bg-nta-red rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-nta-black mb-3">المبادرات الاستراتيجية</h3>
+                    <p class="text-gray-600 mb-4">شراكات استراتيجية ومبادرات متطورة لعملاء الاستشارات التقنية</p>
+                    <a href="init.html" class="inline-flex items-center text-nta-red font-semibold hover:underline">
+                        استكشف المزيد
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </a>
+                </div>
+
+                <!-- Software Card -->
+                <div class="card bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                    <div class="w-16 h-16 bg-nta-red rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-nta-black mb-3">البرمجيات والتطوير</h3>
+                    <p class="text-gray-600 mb-4">استراتيجية توسيع خدمات الاستشارات التقنية وتطوير البرمجيات</p>
+                    <a href="software.html" class="inline-flex items-center text-nta-red font-semibold hover:underline">
+                        استكشف المزيد
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                        </svg>
+                    </a>
+                </div>
+
+                <!-- Contact Card -->
+                <div class="card bg-gradient-to-br from-nta-red to-nta-black rounded-xl shadow-lg p-6 text-white">
+                    <div class="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">تواصل معنا</h3>
+                    <p class="mb-4 opacity-90">هل تحتاج إلى استشارة تقنية متخصصة؟ فريقنا جاهز لمساعدتك</p>
+                    <button class="bg-white text-nta-red px-6 py-2 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
+                        ابدأ المحادثة
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-nta-black text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">الاستشارات التقنية والتدريب</h3>
+                    <p class="text-gray-300">نقدم حلولاً متكاملة في التدريب والاستشارات التقنية لبناء مستقبل رقمي متطور</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">روابط سريعة</h4>
+                    <ul class="space-y-2">
+                        <li><a href="Cert.html" class="text-gray-300 hover:text-white transition duration-300">الشهادات المهنية</a></li>
+                        <li><a href="ai.html" class="text-gray-300 hover:text-white transition duration-300">الذكاء الاصطناعي</a></li>
+                        <li><a href="infra.html" class="text-gray-300 hover:text-white transition duration-300">البنية التحتية</a></li>
+                        <li><a href="init.html" class="text-gray-300 hover:text-white transition duration-300">المبادرات</a></li>
+                        <li><a href="software.html" class="text-gray-300 hover:text-white transition duration-300">البرمجيات</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">معلومات التواصل</h4>
+                    <div class="space-y-2 text-gray-300">
+                        <p>البريد الإلكتروني: info@techconsulting.com</p>
+                        <p>الهاتف: +20 123 456 7890</p>
+                        <p>العنوان: القاهرة، مصر</p>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-300">&copy; 2024 الاستشارات التقنية والتدريب. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
