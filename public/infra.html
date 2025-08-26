@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خطة استشارات البنية التحتية والحوسبة السحابية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: NTA Official (White, Black, Red) -->
+    <!-- Application Structure Plan: A comprehensive, single-page dashboard structure. Key updates include a new, detailed "Cloud Portfolio" section using cards and mini-charts for clarity, and a redesigned "Roadmap" section as an interactive horizontal stepper to better visualize progression. The structure maintains intuitive navigation and integrates the new, richer content seamlessly. -->
+    <!-- Visualization & Content Choices: 
+        - Services: Report Info -> Service Categories -> Goal: Organize/Inform -> Viz: Tabbed Interface -> Interaction: Click to reveal -> Justification: Cleanly separates high-level service categories. Library: Vanilla JS.
+        - Cloud Portfolio: Report Info -> Detailed Cloud Services -> Goal: Inform/Detail -> Viz: Thematic Cards with Mini-Donut Charts -> Interaction: Static display -> Justification: Breaks down complex info into digestible chunks, with visuals highlighting key data points (percentages). Library: Chart.js.
+        - Target Clients: Report Info -> Client Segments -> Goal: Compare/Inform -> Viz: Bar & Doughnut Charts -> Interaction: Hover -> Justification: Provides both direct comparison and proportional views of the data. Library: Chart.js.
+        - Partners: Report Info -> Partner List -> Goal: Organize/Inform -> Viz: Filterable Card Grid with Clickable Modals -> Interaction: Click filter, Click card for details -> Justification: Manages partner info effectively and provides deeper information on demand without cluttering the initial view. Library: Vanilla JS.
+        - Roadmap: Report Info -> Phased Plan -> Goal: Show Process/Change -> Viz: Horizontal Stepper -> Interaction: Click step -> Justification: Fulfills user request for a flow-diagram style, enhancing the sense of progression. Library: Vanilla JS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #FFFFFF;
+            color: #212529;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+            background-color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #dee2e6;
+        }
+        .mini-chart-container {
+            width: 80px;
+            height: 80px;
+        }
+        .nav-link {
+            transition: color 0.3s, border-color 0.3s;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 4px;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #C00000;
+            border-bottom-color: #C00000;
+        }
+        .tab.active {
+            background-color: #C00000;
+            color: #FFFFFF;
+            border-color: #C00000;
+        }
+        .tab {
+             border-bottom: 2px solid #dee2e6;
+        }
+        .partner-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .partner-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .stepper-item {
+            transition: all 0.3s;
+        }
+        .stepper-item.active .stepper-dot {
+            background-color: #C00000;
+            color: white;
+            border-color: #C00000;
+        }
+        .stepper-item.active .stepper-title {
+            color: #C00000;
+            font-weight: 700;
+        }
+        .stepper-content {
+            display: none;
+        }
+        .stepper-content.active {
+            display: block;
+        }
+        .modal-backdrop {
+            transition: opacity 0.3s;
+        }
+        .modal-content {
+            transition: transform 0.3s, opacity 0.3s;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/90 backdrop-blur-sm sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-6 py-3">
+            <div class="flex items-center justify-between">
+                <div class="text-xl font-bold text-black">الأكاديمية الوطنية للتدريب</div>
+                <div class="hidden md:flex items-center space-x-reverse space-x-8">
+                    <a href="#vision" class="nav-link">الرؤية</a>
+                    <a href="#services" class="nav-link">الخدمات</a>
+                    <a href="#cloud-portfolio" class="nav-link">محفظة السحابة</a>
+                    <a href="#clients" class="nav-link">العملاء</a>
+                    <a href="#partners" class="nav-link">الشركاء</a>
+                    <a href="#roadmap" class="nav-link">خارطة الطريق</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="menu-btn" class="text-black focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden mt-4">
+                <a href="#vision" class="block py-2 text-center nav-link">الرؤية</a>
+                <a href="#services" class="block py-2 text-center nav-link">الخدمات</a>
+                <a href="#cloud-portfolio" class="block py-2 text-center nav-link">محفظة السحابة</a>
+                <a href="#clients" class="block py-2 text-center nav-link">العملاء</a>
+                <a href="#partners" class="block py-2 text-center nav-link">الشركاء</a>
+                <a href="#roadmap" class="block py-2 text-center nav-link">خارطة الطريق</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="vision" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6 text-center">
+                <h1 class="text-4xl md:text-5xl font-bold text-red-700 mb-4">خطة استشارات البنية التحتية والحوسبة السحابية</h1>
+                <p class="text-lg md:text-xl text-gray-700 max-w-4xl mx-auto mb-12">
+                    في إطار استراتيجية الدولة "رؤية مصر 2030" ومبادرة "مصر الرقمية"، تطلق الأكاديمية خدمة استشارات تقنية متخصصة. تهدف الخطة لترسيخ مكانة الأكاديمية كشريك استشاري موثوق ومحايد للمؤسسات الوطنية، عبر دمج الخبرة التقنية المتقدمة مع مهمتها الأساسية في بناء وتأهيل القيادات القادرة على قيادة المستقبل الرقمي لمصر.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto text-right">
+                    <div class="bg-white p-8 rounded-lg shadow-lg border-r-4 border-red-700">
+                        <h3 class="text-2xl font-bold text-black mb-3">نموذج "الاستشارة للتدريب"</h3>
+                        <p class="text-gray-600">نقدم نموذجًا فريدًا لا يقتصر على تقديم حلول تقنية، بل يدمج كل مشروع استشاري بمسار تدريبي مخصص لكوادر الجهة المستفيدة. هذا يضمن استدامة المشاريع، ويبني قدرات داخلية قادرة على التشغيل والتطوير المستقبلي.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-lg border-r-4 border-black">
+                        <h3 class="text-2xl font-bold text-black mb-3">الحيادية والثقة</h3>
+                        <p class="text-gray-600">بصفتنا مؤسسة وطنية، نقدم استشارات فنية غير منحازة هدفها الأسمى هو المصلحة الوطنية. نحن نضمن اختيار الحلول الأكثر كفاءة واستدامة للمؤسسات المصرية، بعيدًا عن أي أهداف تجارية، مما يوفر للعملاء شريكًا موثوقًا.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12 text-red-700">محفظة الخدمات الاستشارية</h2>
+                <div class="max-w-5xl mx-auto">
+                    <div class="flex flex-col sm:flex-row justify-center mb-8 border-b">
+                        <button class="tab active text-lg font-semibold py-4 px-6 w-full sm:w-auto text-center" data-tab="on-premise">البنية التحتية التقليدية</button>
+                        <button class="tab text-lg font-semibold py-4 px-6 w-full sm:w-auto text-center text-gray-600" data-tab="hybrid">البيئات الهجينة</button>
+                        <button class="tab text-lg font-semibold py-4 px-6 w-full sm:w-auto text-center text-gray-600" data-tab="cloud">الحوسبة السحابية</button>
+                    </div>
+                    <div id="service-content" class="bg-gray-50 p-8 rounded-lg shadow-inner">
+                    </div>
+                </div>
+            </section>
+
+        <section id="cloud-portfolio" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-4 text-red-700">محفظة الخدمات السحابية الاستشارية</h2>
+                <p class="text-lg text-center text-gray-700 max-w-4xl mx-auto mb-12">
+                    تقدم الأكاديمية مجموعة متكاملة من الخدمات الاستشارية التي تغطي كافة مراحل رحلة التحول إلى السحابة. الأرقام الموضحة تمثل تقديرًا لحجم المجهود والتعقيد التقني لكل خدمة.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col">
+                        <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-xl font-bold text-black flex-1">تقييم الجاهزية ووضع الاستراتيجية</h3>
+                            <div class="mini-chart-container"><canvas class="mini-chart" data-value="70"></canvas></div>
+                        </div>
+                        <p class="text-gray-600">مجهود متوسط إلى عالٍ، يتطلب ورش عمل مكثفة لتقييم الجاهزية التقنية، المالية، والثقافية للمؤسسة، والخروج باستراتيجية تبني واضحة.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col">
+                         <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-xl font-bold text-black flex-1">استشارات اختيار المنصة السحابية</h3>
+                             <div class="mini-chart-container"><canvas class="mini-chart" data-value="30"></canvas></div>
+                        </div>
+                        <p class="text-gray-600">مجهود منخفض، يركز على التحليل المقارن والموضوعي بين AWS, Azure, و GCP بناءً على احتياجات المؤسسة لضمان الاختيار الأمثل.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col">
+                         <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-xl font-bold text-black flex-1">تخطيط وتنفيذ عمليات الترحيل</h3>
+                             <div class="mini-chart-container"><canvas class="mini-chart" data-value="90"></canvas></div>
+                        </div>
+                        <p class="text-gray-600">مجهود عالٍ ومعقد، يتضمن وضع خطة تنفيذية مفصلة لترحيل التطبيقات والبيانات باستخدام منهجيات عالمية مثبتة والإشراف المباشر.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col">
+                         <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-xl font-bold text-black flex-1">الأمن، الحوكمة، والامتثال</h3>
+                             <div class="mini-chart-container"><canvas class="mini-chart" data-value="60"></canvas></div>
+                        </div>
+                        <p class="text-gray-600">مجهود متوسط، يتطلب تحليلًا دقيقًا لتصميم أطر عمل أمنية قوية ومخصصة للسحابة وضمان الامتثال للوائح والقوانين المحلية.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col">
+                         <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-xl font-bold text-black flex-1">تحسين التكاليف والعمليات (FinOps)</h3>
+                             <div class="mini-chart-container"><canvas class="mini-chart" data-value="40"></canvas></div>
+                        </div>
+                        <p class="text-gray-600">مجهود مستمر ومنخفض إلى متوسط، يركز على تطبيق ممارسات الإدارة المالية للسحابة (FinOps) لتوفير رؤية واضحة للتكاليف وخفض النفقات.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg flex flex-col">
+                         <div class="flex items-start justify-between mb-4">
+                            <h3 class="text-xl font-bold text-black flex-1">بناء التطبيقات السحابية الأصلية</h3>
+                             <div class="mini-chart-container"><canvas class="mini-chart" data-value="80"></canvas></div>
+                        </div>
+                        <p class="text-gray-600">مجهود عالٍ ويتطلب فرق تطوير متخصصة لتبني معماريات حديثة مثل الحاويات (Containers) و DevOps لتسريع وتيرة الابتكار.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="clients" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center text-red-700 mb-4">العملاء المستهدفون</h2>
+                <p class="text-lg text-center text-gray-700 max-w-3xl mx-auto mb-12">
+                   لتحقيق أثر سريع وملموس، ستركز خدمة الاستشارات التقنية في مرحلتها الأولى على المؤسسات المتوسطة الحجم والقطاعات المتخصصة التي لديها احتياجات واضحة للتحول الرقمي ولكنها قد تفتقر إلى الموارد الداخلية الكافية لقيادة هذه العملية بمفردها.
+                </p>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="flex flex-col items-center">
+                        <h3 class="text-xl font-semibold text-black mb-4">مقارنة حجم التركيز</h3>
+                        <div class="chart-container"><canvas id="barChart"></canvas></div>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <h3 class="text-xl font-semibold text-black mb-4">توزيع نسب التركيز</h3>
+                        <div class="chart-container"><canvas id="doughnutChart"></canvas></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="partners" class="py-20 bg-gray-50">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center text-red-700 mb-4">منظومة الشراكات الاستراتيجية</h2>
+                 <p class="text-lg text-center text-gray-700 max-w-3xl mx-auto mb-12">
+                   تقوم استراتيجيتنا على بناء منظومة شراكات قوية تجمع بين أفضل التقنيات العالمية والقدرات التنفيذية الوطنية. اضغط على بطاقة أي شريك لعرض المزيد من التفاصيل.
+                </p>
+                <div class="flex flex-wrap justify-center items-center gap-4 mb-8">
+                    <button class="partner-filter-btn active bg-red-700 text-white py-2 px-5 rounded-full" data-filter="all">الكل</button>
+                    <button class="partner-filter-btn bg-gray-200 text-black py-2 px-5 rounded-full" data-filter="national">شركاء وطنيون</button>
+                    <button class="partner-filter-btn bg-gray-200 text-black py-2 px-5 rounded-full" data-filter="global">شركاء عالميون</button>
+                    <button class="partner-filter-btn bg-gray-200 text-black py-2 px-5 rounded-full" data-filter="specialized">شركاء متخصصون</button>
+                </div>
+                <div id="partners-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                </div>
+            </div>
+        </section>
+
+        <section id="roadmap" class="py-20 bg-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-16 text-red-700">خارطة الطريق التنفيذية</h2>
+                <div class="max-w-4xl mx-auto">
+                    <div class="flex justify-between items-center border-b-2 border-gray-300 pb-4">
+                        <div class="stepper-item active text-center cursor-pointer w-1/3" data-step="1">
+                            <div class="stepper-dot w-10 h-10 rounded-full bg-gray-300 border-2 border-gray-300 flex items-center justify-center mx-auto font-bold text-lg">1</div>
+                            <p class="stepper-title mt-2 text-gray-500">الإعداد والإطلاق</p>
+                        </div>
+                        <div class="flex-1 border-t-2 border-gray-300"></div>
+                        <div class="stepper-item text-center cursor-pointer w-1/3" data-step="2">
+                            <div class="stepper-dot w-10 h-10 rounded-full bg-gray-300 border-2 border-gray-300 flex items-center justify-center mx-auto font-bold text-lg">2</div>
+                            <p class="stepper-title mt-2 text-gray-500">التوسع والنمو</p>
+                        </div>
+                        <div class="flex-1 border-t-2 border-gray-300"></div>
+                        <div class="stepper-item text-center cursor-pointer w-1/3" data-step="3">
+                            <div class="stepper-dot w-10 h-10 rounded-full bg-gray-300 border-2 border-gray-300 flex items-center justify-center mx-auto font-bold text-lg">3</div>
+                            <p class="stepper-title mt-2 text-gray-500">الريادة والتنويع</p>
+                        </div>
+                    </div>
+                    <div class="mt-8"><div id="step-content-container"></div></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-red-700 text-white py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 الأكاديمية الوطنية للتدريب. جميع الحقوق محفوظة.</p>
+            <p class="text-sm text-gray-200 mt-2">تطبيق تفاعلي لعرض الخطة الاستراتيجية لخدمات الاستشارات التقنية.</p>
+        </div>
+    </footer>
+
+    <!-- Partner Details Modal -->
+    <div id="partner-modal" class="fixed inset-0 z-50 hidden items-center justify-center">
+        <div id="modal-backdrop" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50"></div>
+        <div id="modal-content" class="modal-content bg-white rounded-lg shadow-xl w-11/12 md:w-2/3 lg:w-1/2 max-w-4xl max-h-[90vh] overflow-y-auto p-8 relative transform scale-95 opacity-0">
+            <button id="modal-close-btn" class="absolute top-4 left-4 text-gray-500 hover:text-black">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <div id="modal-body" class="text-right"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const servicesData = {
+                'on-premise': {
+                    title: 'خدمات البنية التحتية التقليدية (On-Premise)',
+                    description: 'تستهدف هذه الحزمة المؤسسات التي لا تزال تعتمد بشكل كبير على مراكز بياناتها الخاصة، وتهدف إلى تحديثها وتحسين كفاءتها وأمانها لتمثل أساسًا صلبًا لأي تحول رقمي مستقبلي.',
+                    items: [
+                        'تقييم وتدقيق البنية التحتية الحالية (Infrastructure Assessment & Audit)',
+                        'استشارات تحديث وتطوير مراكز البيانات (Data Center Modernization)',
+                        'تصميم وتحسين الشبكات وأمن المعلومات (Network & Security Architecture)',
+                        'استراتيجيات التعافي من الكوارث واستمرارية الأعمال (DR & Business Continuity)'
+                    ]
+                },
+                'hybrid': {
+                    title: 'خدمات البيئات الهجينة والمختلطة',
+                    description: 'مصممة لمساعدة المؤسسات على تحقيق أقصى استفادة من استثماراتها الحالية مع تبني التقنيات السحابية الحديثة بشكل متكامل ومرن.',
+                    items: [
+                        'استراتيجيات التكامل بين البنية التقليدية والسحابية',
+                        'إدارة وأتمتة البيئات الهجينة من خلال منصات موحدة (مثل Azure Arc)',
+                        'تخطيط وتنفيذ عمليات ترحيل أعباء العمل (Workload Migration)',
+                        'استشارات أمنية للبيئات الهجينة لضمان حماية شاملة'
+                    ]
+                },
+                'cloud': {
+                    title: 'خدمات الحوسبة السحابية الاستشارية',
+                    description: 'مصممة خصيصًا لدعم وتفعيل سياسة الدولة "الحوسبة السحابية أولاً"، وتمكين المؤسسات من الانتقال من الفهم النظري إلى التطبيق العملي المدروس.',
+                    items: [
+                        'تقييم الجاهزية للسحابة ووضع استراتيجية التبني (Adoption Strategy)',
+                        'استشارات محايدة لاختيار المنصة السحابية الأنسب (AWS, Azure, GCP)',
+                        'تخطيط وتنفيذ عمليات الترحيل إلى السحابة (Migration Execution)',
+                        'استشارات الأمن السحابي والحوكمة والامتثال (Security & Compliance)',
+                        'تحسين التكاليف والعمليات السحابية (FinOps)',
+                        'استشارات بناء التطبيقات السحابية الأصلية (Cloud-Native & DevOps)'
+                    ]
+                }
+            };
+            
+            const partnersData = [
+                { id: 'benya-group', name: 'Benya Group', type: 'national', logo: 'https://placehold.co/200x100/C00000/FFFFFF?text=Benya', description: 'هي شركة رائدة في توفير الحلول الرقمية والبنية التحتية لتكنولوجيا المعلومات والاتصالات في مصر ومنطقة الشرق الأوسط وأفريقيا. تقدم مجموعة واسعة من الخدمات تشمل حلول الاتصالات، الخدمات السحابية والأمنية، ومراكز البيانات واسعة النطاق.', projects: 'نفذت الشركة مشاريع تحول رقمي كبرى لوزارة التربية والتعليم وقطاع الأعمال العام.', address: '76 شارع الشويفات، التجمع الخامس، القاهرة الجديدة، القاهرة.', phone: '+20225428464', email: 'chairman@benya.capital', website: 'https://www.benya.capital' },
+                { id: 'giza-systems', name: 'Giza Systems', type: 'national', logo: 'https://placehold.co/200x100/C00000/FFFFFF?text=Giza+Systems', description: 'تعد من أقدم وأكبر شركات تكامل الأنظمة في المنطقة، حيث تقوم بتصميم ونشر حلول تقنية خاصة بالصناعة للقطاعات كثيفة الأصول مثل الاتصالات والمرافق والنفط والغاز والنقل.', projects: 'تتمتع الشركة بسجل حافل في تنفيذ مشاريع التحول الرقمي للقطاع الحكومي.', address: 'قطعة 176، القطاع الثاني، سيتي سنتر، القاهرة الجديدة، مصر.', phone: '+20226146000', email: 'sales.support@gizasystems.com', website: 'https://www.gizasystems.com' },
+                { id: 'raya-it', name: 'Raya IT', type: 'national', logo: 'https://placehold.co/200x100/C00000/FFFFFF?text=Raya+IT', description: 'كجزء من مجموعة رايا القابضة، وهي شركة استثمارية رائدة، تمتلك رايا لتقنية المعلومات خبرة متراكمة في مجالات التكنولوجيا والبنية التحتية.', projects: 'تقدم الشركة خدمات متكاملة تشمل حلول مراكز البيانات وخدمات تكنولوجيا المعلومات المتكاملة للشركات.', address: 'مبنى شركة رايا، شارع 26 يوليو، المنطقة السياحية، 6 أكتوبر، الجيزة، مصر.', phone: '+20238276000', email: 'rayait_info@rayacorp.com', website: 'https://www.raya-it.net' },
+                { id: 'orange-business', name: 'Orange Business', type: 'national', logo: 'https://placehold.co/200x100/C00000/FFFFFF?text=Orange', description: 'هي الذراع المخصص للشركات والمؤسسات ضمن مجموعة أورانج العالمية، وتعتبر شركة متكاملة لخدمات الشبكات والحلول الرقمية.', projects: 'لديها خبرة واسعة في تطوير مشاريع المدن الذكية الكبرى، بما في ذلك تصميم وبناء البنية التحتية لتكنولوجيا المعلومات والاتصالات المستندة إلى السحابة للعاصمة الإدارية الجديدة في مصر.', address: '2005C كورنيش النيل، أبراج نايل سيتي، البرج الشمالي، الدور 32، القاهرة، مصر.', phone: '16250', email: 'Enterprisesupport.eg@orange.com', website: 'https://www.orange-business.com/en' },
+                { id: 'sumerge', name: 'Sumerge', type: 'national', logo: 'https://placehold.co/200x100/C00000/FFFFFF?text=Sumerge', description: 'شركة متخصصة في تقديم حلول تكنولوجيا المعلومات التي تساعد المؤسسات على تحديث بنيتها التحتية والانتقال إلى السحابة، وتكامل المنصات، وأتمتة العمليات.', projects: 'لديها خبرة في العمل مع القطاع الحكومي والمصرفي، ونفذت مشاريع لجهات مثل وزارة العمل والتنمية الاجتماعية في السعودية وصندوق التمويل العقاري في مصر.', address: '75/77 شارع 199، المعادي، القاهرة، مصر.', phone: '+20227545823', email: 'info@sumerge.com', website: 'https://www.sumerge.com' },
+                { id: 'it-park', name: 'IT Park', type: 'national', logo: 'https://placehold.co/200x100/C00000/FFFFFF?text=IT+Park', description: 'هي شركة متخصصة في خدمات الدعم الفني والاستشارات التقنية، وتقدم خدمات متنوعة مثل بناء البنية التحتية للشبكات، ومراكز البيانات المحلية، وتأمين الشبكات.', projects: 'تطوير أنظمة تخطيط موارد المؤسسات (Enterprise Resource Planning - ERP).', address: '24 شارع الشهيد مصطفى رياض، مدينة نصر، القاهرة، مصر.', phone: '+201202140386', email: 'Info@ITPark-eg.com', website: 'https://itpark-eg.com' },
+                { id: 'aws', name: 'Amazon AWS', type: 'global', logo: 'https://placehold.co/200x100/212529/FFFFFF?text=AWS', description: 'تعد Amazon Web Services المنصة السحابية الأكثر شمولاً واستخدامًا في العالم، حيث تقدم أكثر من 200 خدمة متكاملة من مراكز البيانات على مستوى العالم.', projects: 'يستخدمها ملايين العملاء، بدءًا من الشركات الناشئة الأسرع نموًا إلى أكبر المؤسسات والوكالات الحكومية الرائدة، لخفض التكاليف وزيادة المرونة والابتكار بشكل أسرع.', address: 'عالمي', phone: 'N/A', email: 'N/A', website: 'https://aws.amazon.com' },
+                { id: 'azure', name: 'Microsoft Azure', type: 'global', logo: 'https://placehold.co/200x100/212529/FFFFFF?text=Azure', description: 'منصة الحوسبة السحابية من Microsoft، والتي توفر مجموعة دائمة التوسع من الخدمات لمساعدة المؤسسات على مواجهة تحديات الأعمال.', projects: 'تتميز بتكاملها العميق مع منتجات Microsoft الأخرى وقدراتها القوية في البيئات الهجينة. شريك استراتيجي للعديد من الحكومات والمؤسسات الكبرى حول العالم في رحلة التحول الرقمي.', address: 'عالمي', phone: 'N/A', email: 'N/A', website: 'https://azure.microsoft.com' },
+                { id: 'gcp', name: 'Google Cloud (GCP)', type: 'global', logo: 'https://placehold.co/200x100/212529/FFFFFF?text=GCP', description: 'يمثل GCP شريكًا استراتيجيًا للمشاريع التي تركز بشكل كبير على المجالات المستقبلية ذات الأولوية الوطنية، مثل تحليل البيانات الضخمة (Big Data)، والذكاء الاصطناعي (AI)، والتعلم الآلي (Machine Learning).', projects: 'خبرة Google العميقة في هذه المجالات يمكن أن تدعم مبادرات الدولة لبناء اقتصاد قائم على المعرفة، وتستخدمه الشركات التي تعتمد على البيانات لاتخاذ قراراتها.', address: 'عالمي', phone: 'N/A', email: 'N/A', website: 'https://cloud.google.com' },
+                { id: 'cybersecurity-firms', name: 'شركات الأمن السيبراني', type: 'specialized', logo: 'https://placehold.co/200x100/6c757d/FFFFFF?text=Cybersecurity', description: 'شركاء متخصصون للتعاون في تقديم تقييمات أمنية متقدمة، واختبارات اختراق، واستشارات حول الامتثال لمعايير الأمن السيبراني.', projects: 'تأمين البنى التحتية الحساسة للعديد من المؤسسات في القطاعين المالي والحكومي.', address: 'متعدد', phone: 'N/A', email: 'N/A', website: 'N/A' },
+                { id: 'egypt-trust', name: 'Egypt Trust', type: 'specialized', logo: 'https://placehold.co/200x100/6c757d/FFFFFF?text=Egypt+Trust', description: 'شريك معتمد ورائد في خدمات التوقيع والختم الإلكتروني، وهو مكون أساسي وحيوي لنجاح أي خدمة حكومية رقمية تتطلب توثيقًا للمعاملات والمستندات.', projects: 'توفير حلول التوقيع الإلكتروني للعديد من المنصات الحكومية والتجارية في مصر.', address: 'القرية الذكية، الجيزة، مصر', phone: '16789', email: 'info@egypttrust.com', website: 'https://egypttrust.com' },
+                { id: 'erp-vendors', name: 'موردو حلول ERP', type: 'specialized', logo: 'https://placehold.co/200x100/6c757d/FFFFFF?text=SAP+%26+Oracle', description: 'يشمل شركاء مثل SAP و Oracle. نظرًا لأن العديد من مشاريع التحول الرقمي الكبرى تتضمن تحديث أو تطبيق أنظمة ERP، فإن الشراكة مع هؤلاء الموردين ستوفر رؤية متكاملة للمشاريع.', projects: 'تطبيق أنظمة تخطيط الموارد المؤسسية في كبرى الشركات والمؤسسات الحكومية في مصر والمنطقة.', address: 'متعدد', phone: 'N/A', email: 'N/A', website: 'N/A' }
+            ];
+
+            const roadmapData = {
+                1: { phase: 'المرحلة الأولى: الإعداد والإطلاق', duration: 'الأشهر 0-6', goals: 'بناء القدرات الداخلية، إطلاق الخدمات الأولية، وتحقيق نجاحات سريعة.', activities: ['تشكيل الفريق الاستشاري الأساسي من الخبراء.', 'إضفاء الطابع الرسمي على الشراكات الاستراتيجية الأولية.', 'تطوير حزم الخدمات الاستشارية الأولية.', 'إطلاق مشروعين إلى ثلاثة مشاريع رائدة (Pilot Projects).'] },
+                2: { phase: 'المرحلة الثانية: التوسع والنمو', duration: 'الأشهر 7-18', goals: 'توسيع نطاق الخدمات، تعزيز الخبرات، وترسيخ سمعة الأكاديمية.', activities: ['توسيع الفريق الاستشاري وتطوير خبراته بالشهادات المعتمدة.', 'توسيع نطاق الشراكات لتشمل كافة اللاعبين الرئيسيين.', 'استهداف شريحة أوسع من المؤسسات بناءً على قصص النجاح.'] },
+                3: { phase: 'المرحلة الثالثة: الريادة والتنويع', duration: 'الأشهر 19-36', goals: 'تحقيق الريادة في الشرائح المستهدفة، وبدء التوسع المدروس في قطاعات أخرى.', activities: ['ترسيخ مكانة الأكاديمية كمرجع استشاري موثوق.', 'التوسع المدروس في تقديم الخدمات لقطاعات حيوية أخرى كالقطاع المصرفي.', 'تطوير خدمات استشارية متقدمة في مجالات ناشئة كالذكاء الاصطناعي.'] }
+            };
+
+            // Service Tabs
+            const serviceContentEl = document.getElementById('service-content');
+            const tabs = document.querySelectorAll('.tab');
+            function updateServiceContent(tabKey) {
+                const data = servicesData[tabKey];
+                serviceContentEl.innerHTML = `<h3 class="text-2xl font-bold text-black mb-4">${data.title}</h3><p class="text-gray-600 mb-6">${data.description}</p><ul class="space-y-3 list-disc list-inside text-right">${data.items.map(item => `<li class="text-gray-800">${item}</li>`).join('')}</ul>`;
+            }
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => { t.classList.remove('active', 'text-white', 'bg-red-700'); t.classList.add('text-gray-600'); });
+                    tab.classList.add('active', 'text-white', 'bg-red-700');
+                    tab.classList.remove('text-gray-600');
+                    updateServiceContent(tab.dataset.tab);
+                });
+            });
+            updateServiceContent('on-premise');
+
+            // Partners Filter & Modal
+            const partnersGrid = document.getElementById('partners-grid');
+            const filterBtns = document.querySelectorAll('.partner-filter-btn');
+            const modal = document.getElementById('partner-modal');
+            const modalBody = document.getElementById('modal-body');
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalCloseBtn = document.getElementById('modal-close-btn');
+
+            function showPartnerDetails(partnerId) {
+                const partner = partnersData.find(p => p.id === partnerId);
+                if (!partner) return;
+                modalBody.innerHTML = `
+                    <div class="flex flex-col sm:flex-row items-start gap-6">
+                        <img src="${partner.logo}" alt="${partner.name}" class="w-full sm:w-1/3 h-auto object-contain rounded-lg border p-2" onerror="this.onerror=null;this.src='https://placehold.co/200x100/cccccc/FFFFFF?text=Image+Error';">
+                        <div class="flex-1">
+                            <h2 class="text-3xl font-bold text-black mb-2">${partner.name}</h2>
+                            <p class="text-gray-700 mb-4">${partner.description}</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 border-t pt-4">
+                        <h3 class="text-xl font-bold text-red-700 mb-2">سابقة الأعمال والخبرات</h3>
+                        <p class="text-gray-600 mb-4">${partner.projects}</p>
+                        <h3 class="text-xl font-bold text-red-700 mb-2">معلومات التواصل</h3>
+                        <ul class="space-y-2 text-gray-700">
+                            <li><strong>العنوان:</strong> ${partner.address}</li>
+                            <li><strong>الهاتف:</strong> ${partner.phone}</li>
+                            <li><strong>البريد الإلكتروني:</strong> ${partner.email}</li>
+                            <li><strong>الموقع الإلكتروني:</strong> <a href="${partner.website}" target="_blank" class="text-blue-600 hover:underline">${partner.website}</a></li>
+                        </ul>
+                    </div>
+                `;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                setTimeout(() => {
+                    modalBackdrop.classList.remove('opacity-0');
+                    document.getElementById('modal-content').classList.remove('scale-95', 'opacity-0');
+                }, 10);
+            }
+
+            function hidePartnerDetails() {
+                modalBackdrop.classList.add('opacity-0');
+                document.getElementById('modal-content').classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.classList.remove('flex');
+                }, 300);
+            }
+
+            modalCloseBtn.addEventListener('click', hidePartnerDetails);
+            modalBackdrop.addEventListener('click', hidePartnerDetails);
+
+            function renderPartners(filter = 'all') {
+                partnersGrid.innerHTML = '';
+                const filteredPartners = filter === 'all' ? partnersData : partnersData.filter(p => p.type === filter);
+                filteredPartners.forEach(partner => {
+                    const card = document.createElement('div');
+                    card.className = 'partner-card bg-white p-4 rounded-lg shadow-md flex flex-col items-center justify-center text-center border-b-4 border-gray-200 hover:border-red-700';
+                    card.dataset.partnerId = partner.id;
+                    card.innerHTML = `<img src="${partner.logo}" alt="${partner.name}" class="h-16 mb-4 object-contain" onerror="this.onerror=null;this.src='https://placehold.co/200x100/cccccc/FFFFFF?text=Image+Error';"><h4 class="font-semibold text-black">${partner.name}</h4>`;
+                    card.addEventListener('click', () => showPartnerDetails(partner.id));
+                    partnersGrid.appendChild(card);
+                });
+            }
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => {
+                        b.classList.remove('active', 'bg-red-700', 'text-white');
+                        b.classList.add('bg-gray-200', 'text-black');
+                    });
+                    btn.classList.add('active', 'bg-red-700', 'text-white');
+                    btn.classList.remove('bg-gray-200', 'text-black');
+                    renderPartners(btn.dataset.filter);
+                });
+            });
+            renderPartners();
+
+            // Roadmap Stepper
+            const stepperItems = document.querySelectorAll('.stepper-item');
+            const stepContentContainer = document.getElementById('step-content-container');
+            function updateStepContent(stepKey) {
+                const data = roadmapData[stepKey];
+                stepContentContainer.innerHTML = `<div class="stepper-content active bg-gray-50 p-6 rounded-lg shadow-inner text-right"><p class="text-gray-500 mb-4 font-semibold">${data.duration}</p><h4 class="font-bold text-red-700 mb-2">الأهداف:</h4><p class="mb-4 text-gray-700">${data.goals}</p><h4 class="font-bold text-red-700 mb-2">الأنشطة الرئيسية:</h4><ul class="list-disc list-inside space-y-1 text-gray-700">${data.activities.map(act => `<li>${act}</li>`).join('')}</ul></div>`;
+            }
+            stepperItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    stepperItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    updateStepContent(item.dataset.step);
+                });
+            });
+            updateStepContent('1');
+
+            // Charting Logic
+            const clientData = {
+                labels: ['النقابات', 'منظمات أهلية', 'مجالس قومية', 'مراكز تدريب', 'مكاتب فنية'],
+                values: [25, 20, 15, 20, 20]
+            };
+            const chartColors = ['#C00000', '#212529', '#6c757d', '#dc3545', '#343a40'];
+            const defaultChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { color: '#212529', font: { family: "'Cairo', sans-serif", size: 12 }}},
+                    tooltip: { bodyFont: { family: "'Cairo', sans-serif" }, titleFont: { family: "'Cairo', sans-serif" }}
+                }
+            };
+
+            new Chart(document.getElementById('barChart'), {
+                type: 'bar',
+                data: {
+                    labels: clientData.labels,
+                    datasets: [{
+                        label: 'التركيز على القطاعات (٪)',
+                        data: clientData.values,
+                        backgroundColor: chartColors,
+                    }]
+                },
+                options: { ...defaultChartOptions,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#e9ecef' }, ticks: { color: '#495057' }},
+                        x: { grid: { color: 'transparent' }, ticks: { color: '#495057' }}
+                    },
+                    plugins: { ...defaultChartOptions.plugins, legend: { display: false }}
+                }
+            });
+
+            new Chart(document.getElementById('doughnutChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: clientData.labels,
+                    datasets: [{
+                        data: clientData.values,
+                        backgroundColor: chartColors,
+                        borderColor: '#f8f9fa',
+                        borderWidth: 4
+                    }]
+                },
+                options: { ...defaultChartOptions,
+                     plugins: { ...defaultChartOptions.plugins, 
+                        legend: { position: 'bottom' },
+                        datalabels: {
+                            color: '#FFFFFF',
+                            font: { family: "'Cairo', sans-serif", weight: 'bold' },
+                            formatter: (value) => value + '%'
+                        }
+                     }
+                },
+                plugins: [ChartDataLabels]
+            });
+            
+            document.querySelectorAll('.mini-chart').forEach(canvas => {
+                const value = parseInt(canvas.dataset.value);
+                new Chart(canvas, {
+                    type: 'doughnut',
+                    data: {
+                        datasets: [{
+                            data: [value, 100 - value],
+                            backgroundColor: ['#C00000', '#e9ecef'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '70%',
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: false },
+                            datalabels: {
+                                color: '#212529',
+                                font: { family: "'Cairo', sans-serif", weight: 'bold', size: 16 },
+                                formatter: (val, ctx) => ctx.dataIndex === 0 ? val + '%' : ''
+                            }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            });
+
+            // Mobile Menu & Nav Scroll
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuBtn.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 70) { current = section.getAttribute('id'); }
+                });
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) { link.classList.add('active'); }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

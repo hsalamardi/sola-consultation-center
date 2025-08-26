@@ -1,293 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مخطط معلوماتي: استراتيجية الذكاء الاصطناعي في القطاع العام المصري</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Energetic & Playful -->
-    <!-- Narrative & Structure Plan: The infographic tells a linear story designed for clarity and impact. It starts with a bold "Hook" (The Vision) to grab attention. It then logically flows to "Core Technologies," explaining the foundational tools. The heart of the narrative is the "Sector Transformation" section, which uses a grid to show the breadth of application. This is followed by the "Strategic Roadmap," a timeline showing the phased implementation plan (Change over time). The narrative then pivots to strategic analysis with the "Priority Matrix" (Compare/Organize) and a "SWOT Analysis" (Organize). This structure guides the user from the "what" and "how" to the "when" and "why," creating a comprehensive and persuasive narrative arc. -->
-    <!-- Visualization & Content Choices: 
-        1.  Data Point: 6 Core AI Technologies -> Goal: Inform -> Chosen Viz: Icon-based cards (HTML/CSS). Justification: Visually appealing and quickly communicates the function of each technology without complex charts. Method: Structured HTML with Tailwind. CONFIRMS NO SVG.
-        2.  Data Point: 5 Key Sectors -> Goal: Compare -> Chosen Viz: Donut Chart showing equal focus. Justification: A donut chart effectively visualizes the equal distribution of focus across the five key areas mentioned in the report, emphasizing a balanced strategy. Method: Chart.js/Canvas. CONFIRMS NO SVG.
-        3.  Data Point: 3-Phase Implementation Plan -> Goal: Change -> Chosen Viz: Horizontal Timeline. Justification: A timeline is the most intuitive and universally understood method for representing a phased, time-based plan. Method: Structured HTML with Tailwind. CONFIRMS NO SVG.
-        4.  Data Point: Project Priority Matrix -> Goal: Organize/Relationships -> Chosen Viz: Bubble Chart. Justification: A bubble chart is superior to a simple table for visualizing three dimensions of data (Impact, Complexity, Project), making strategic clusters like "Quick Wins" immediately apparent. Method: Chart.js/Canvas. CONFIRMS NO SVG.
-        5.  Data Point: SWOT Analysis -> Goal: Organize -> Chosen Viz: Four-quadrant grid. Justification: This is the standard and most effective way to present a SWOT analysis, allowing for easy comparison of internal and external factors. Method: Structured HTML with Tailwind Grid. CONFIRMS NO SVG.
-    -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <style>
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: #F8F9FA; /* Light Grey Background */
-        }
-        .chart-container {
-            position: relative;
-            width: 100%;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            height: 400px;
-            max-height: 50vh;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 500px;
-            }
-        }
-    </style>
-</head>
-<body class="bg-[#F8F9FA] text-[#343A40]">
-
-    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
-
-        <!-- Header Section -->
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-[#007BFF] mb-4">مصر تتبنى المستقبل: الذكاء الاصطناعي في القطاع العام</h1>
-            <p class="text-lg md:text-xl text-[#6C757D]">مخطط استراتيجي لتحويل الخدمات الحكومية وتعزيز الكفاءة بما يتماشى مع رؤية 2030</p>
-        </header>
-
-        <!-- Core Technologies Section -->
-        <section class="mb-16">
-            <h2 class="text-3xl font-bold text-center mb-8 text-[#343A40]">الترسانة التقنية: 6 أدوات أساسية للتحول الرقمي</h2>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 text-center">
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <p class="text-4xl mb-2">📄</p>
-                    <h3 class="font-bold">OCR</h3>
-                    <p class="text-sm text-gray-600">رقمنة الوثائق</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <p class="text-4xl mb-2">🎙️</p>
-                    <h3 class="font-bold">ASR</h3>
-                    <p class="text-sm text-gray-600">تحويل الكلام لنص</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <p class="text-4xl mb-2">🔊</p>
-                    <h3 class="font-bold">TTS</h3>
-                    <p class="text-sm text-gray-600">تحويل النص لكلام</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <p class="text-4xl mb-2">🔍</p>
-                    <h3 class="font-bold">RAG</h3>
-                    <p class="text-sm text-gray-600">إجابات موثوقة</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <p class="text-4xl mb-2">🤖</p>
-                    <h3 class="font-bold">Chatbots</h3>
-                    <p class="text-sm text-gray-600">خدمة آلية</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <p class="text-4xl mb-2">🖋️</p>
-                    <h3 class="font-bold">Tashkeel</h3>
-                    <p class="text-sm text-gray-600">التشكيل الآلي</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Sector Transformation Section -->
-        <section class="mb-16 bg-white p-8 rounded-lg shadow-lg">
-            <h2 class="text-3xl font-bold text-center mb-8 text-[#343A40]">تحول شامل: 5 قطاعات حيوية مستهدفة</h2>
-            <div class="flex flex-col md:flex-row items-center">
-                <div class="w-full md:w-1/2 chart-container" style="height: 300px; max-height: 300px;">
-                    <canvas id="sectorsChart"></canvas>
-                </div>
-                <div class="w-full md:w-1/2 md:pr-8">
-                    <p class="text-lg text-[#6C757D] mb-4">
-                        تركز الاستراتيجية على إحداث نقلة نوعية في خمسة قطاعات رئيسية، مما يضمن وصول فوائد الذكاء الاصطناعي إلى كل جوانب حياة المواطن. كل قطاع يمثل ساحة للابتكار تهدف إلى تحسين الخدمات بشكل جذري.
-                    </p>
-                    <ul class="space-y-2 text-md">
-                        <li class="flex items-center"><span class="text-xl ml-2 text-[#007BFF]">🏛️</span> <strong>الحكومة والإدارة:</strong> لخدمات أسرع وأكثر شفافية.</li>
-                        <li class="flex items-center"><span class="text-xl ml-2 text-[#28A745]">🎓</span> <strong>التعليم والتدريب:</strong> لتعزيز الإنصاف وبناء القدرات.</li>
-                        <li class="flex items-center"><span class="text-xl ml-2 text-[#DC3545]">❤️</span> <strong>الصحة والخدمات الاجتماعية:</strong> لرعاية صحية فعالة وشاملة.</li>
-                        <li class="flex items-center"><span class="text-xl ml-2 text-[#FFC107]">💰</span> <strong>المالية والاقتصاد:</strong> لتعزيز الكفاءة والشفافية.</li>
-                        <li class="flex items-center"><span class="text-xl ml-2 text-[#17A2B8]">📜</span> <strong>الثقافة والإعلام:</strong> للحفاظ على التراث وتحديث الإعلام.</li>
-                    </ul>
-                </div>
-            </div>
-        </section>
-
-        <!-- Strategic Roadmap Section -->
-        <section class="mb-16">
-            <h2 class="text-3xl font-bold text-center mb-8 text-[#343A40]">خارطة الطريق: من التأسيس إلى الابتكار في 5 سنوات</h2>
-            <div class="relative">
-                <!-- The connecting line -->
-                <div class="border-2 absolute border-opacity-20 border-[#007BFF] h-full" style="left: 50%; transform: translateX(-1px);"></div>
-                <!-- Phase 1 -->
-                <div class="mb-8 flex justify-between items-center w-full">
-                    <div class="order-1 w-5/12"></div>
-                    <div class="z-20 flex items-center order-1 bg-[#007BFF] shadow-xl w-12 h-12 rounded-full">
-                        <h1 class="mx-auto font-semibold text-lg text-white">1</h1>
-                    </div>
-                    <div class="order-1 bg-white rounded-lg shadow-xl w-5/12 px-6 py-4">
-                        <h3 class="font-bold text-[#007BFF] text-xl">المرحلة الأولى: التأسيس</h3>
-                        <p class="text-sm leading-snug tracking-wide text-gray-900 text-opacity-100">(السنة 1) التركيز على المكاسب السريعة وبناء الأساس عبر مشروع "المنارة" الرائد.</p>
-                    </div>
-                </div>
-                <!-- Phase 2 -->
-                <div class="mb-8 flex justify-between flex-row-reverse items-center w-full">
-                    <div class="order-1 w-5/12"></div>
-                    <div class="z-20 flex items-center order-1 bg-[#28A745] shadow-xl w-12 h-12 rounded-full">
-                        <h1 class="mx-auto text-white font-semibold text-lg">2</h1>
-                    </div>
-                    <div class="order-1 bg-white rounded-lg shadow-xl w-5/12 px-6 py-4">
-                        <h3 class="font-bold text-[#28A745] text-xl">المرحلة الثانية: التوسع</h3>
-                        <p class="text-sm leading-snug tracking-wide text-gray-900 text-opacity-100">(السنتان 2-3) تعميم الحلول الناجحة وإطلاق المشاريع الاستراتيجية الأكثر تعقيدًا.</p>
-                    </div>
-                </div>
-                <!-- Phase 3 -->
-                <div class="mb-8 flex justify-between items-center w-full">
-                    <div class="order-1 w-5/12"></div>
-                    <div class="z-20 flex items-center order-1 bg-[#FFC107] shadow-xl w-12 h-12 rounded-full">
-                        <h1 class="mx-auto font-semibold text-lg text-white">3</h1>
-                    </div>
-                    <div class="order-1 bg-white rounded-lg shadow-xl w-5/12 px-6 py-4">
-                        <h3 class="font-bold text-[#FFC107] text-xl">المرحلة الثالثة: التحول</h3>
-                        <p class="text-sm leading-snug tracking-wide text-gray-900 text-opacity-100">(السنتان 4-5) دمج الذكاء الاصطناعي في صنع القرار وإطلاق منصات وطنية مبتكرة.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Priority Matrix Section -->
-        <section class="mb-16">
-            <h2 class="text-3xl font-bold text-center mb-2 text-[#343A40]">مصفوفة الأولويات: تحديد نقطة البداية</h2>
-            <p class="text-center text-[#6C757D] mb-8">تصنيف المشاريع المقترحة للمساعدة في اتخاذ قرارات استراتيجية، مع التركيز على "المكاسب السريعة" لبناء الزخم.</p>
-            <div class="bg-white p-4 rounded-lg shadow-lg">
-                <div class="chart-container">
-                    <canvas id="priorityMatrixChart"></canvas>
-                </div>
-            </div>
-        </section>
-
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Tooltip Configuration
-            const tooltipTitleCallback = {
-                plugins: {
-                    tooltip: {
-                        callbacks: {
-                            title: function(tooltipItems) {
-                                const item = tooltipItems[0];
-                                let label = item.chart.data.labels[item.dataIndex];
-                                if (Array.isArray(label)) {
-                                  return label.join(' ');
-                                } else {
-                                  return label;
-                                }
-                            }
-                        }
-                    }
-                }
-            };
-
-            // Sectors Donut Chart
-            const sectorsCtx = document.getElementById('sectorsChart').getContext('2d');
-            new Chart(sectorsCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['الحكومة', 'التعليم', 'الصحة', 'المالية', 'الثقافة'],
-                    datasets: [{
-                        label: 'التركيز القطاعي',
-                        data: [20, 20, 20, 20, 20],
-                        backgroundColor: [
-                            '#007BFF',
-                            '#28A745',
-                            '#DC3545',
-                            '#FFC107',
-                            '#17A2B8'
-                        ],
-                        borderColor: '#FFFFFF',
-                        borderWidth: 3
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                font: {
-                                    family: "'Cairo', sans-serif",
-                                    size: 14
-                                }
-                            }
-                        },
-                        tooltip: tooltipTitleCallback.plugins.tooltip
-                    }
-                }
-            });
-
-            // Priority Matrix Bubble Chart
-            const priorityCtx = document.getElementById('priorityMatrixChart').getContext('2d');
-            const priorityData = {
-                datasets: [{
-                    label: 'مكاسب سريعة',
-                    data: [
-                        { x: 2, y: 9, r: 20, label: 'روبوت المحادثة الداخلي' },
-                        { x: 3, y: 8, r: 25, label: 'OCR لإجراءات KYC بالبنوك' },
-                        { x: 4, y: 8, r: 22, label: 'روبوتات الخدمة العامة' }
-                    ],
-                    backgroundColor: 'rgba(40, 167, 69, 0.7)'
-                }, {
-                    label: 'مبادرات استراتيجية',
-                    data: [
-                        { x: 9, y: 10, r: 30, label: 'OCR للمخطوطات التراثية' },
-                        { x: 8, y: 9, r: 28, label: 'البوابة الصوتية الموحدة' },
-                        { x: 7, y: 8, r: 32, label: 'ASR للسجلات الطبية' }
-                    ],
-                    backgroundColor: 'rgba(0, 123, 255, 0.7)'
-                }, {
-                    label: 'تحسينات تدريجية',
-                    data: [
-                        { x: 3, y: 4, r: 15, label: 'ASR لتفريغ الاجتماعات' },
-                        { x: 4, y: 3, r: 18, label: 'OCR للأرشفة الإدارية' }
-                    ],
-                    backgroundColor: 'rgba(255, 193, 7, 0.7)'
-                }]
-            };
-
-            new Chart(priorityCtx, {
-                type: 'bubble',
-                data: priorityData,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            title: { display: true, text: 'تعقيد التنفيذ (منخفض ← مرتفع)', font: { family: "'Cairo', sans-serif", size: 14 }},
-                            min: 0, max: 10, grid: { color: '#E9ECEF' }
-                        },
-                        y: {
-                            title: { display: true, text: 'الأثر الاستراتيجي (منخفض ← مرتفع)', font: { family: "'Cairo', sans-serif", size: 14 }},
-                            min: 0, max: 11, grid: { color: '#E9ECEF' }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: { font: { family: "'Cairo', sans-serif", size: 12 }}
-                        },
-                        tooltip: {
-                             callbacks: {
-                                label: function(context) {
-                                    const item = context.dataset.data[context.dataIndex];
-                                    return item.label;
-                                }
-                            },
-                            bodyFont: { family: "'Cairo', sans-serif" },
-                            titleFont: { family: "'Cairo', sans-serif" }
-                        }
-                    }
-                }
-            });
-        });
-    </script>
-
-</body>
-</html>

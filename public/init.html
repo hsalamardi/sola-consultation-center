@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مبادرات وشراكات استراتيجية لعملاء الاستشارات التقنية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Red, Black, Grey, White -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard. The structure prioritizes user exploration over the linear format of the report. It starts with a high-level summary, then allows users to dive into details via an interactive 'Initiatives' section with clickable cards. Key data points like 'Partnership Tiers' and 'Benefits' are transformed into dynamic charts for quick comparison and understanding. A dedicated section for the case study provides a real-world example. This thematic structure, supported by sticky navigation, allows users (e.g., potential government or private sector partners) to quickly find information relevant to them and grasp the overall value proposition efficiently. -->
+    <!-- Visualization & Content Choices: 
+        1. Partnership Tiers (Table) -> Goal: Compare -> Viz: Horizontal Bar Chart (Chart.js) -> Interaction: Tooltips on hover show included services -> Justification: Visually represents the increasing value of each tier, making comparison more intuitive than a static table.
+        2. Benefits (Text) -> Goal: Inform/Summarize -> Viz: Two Donut Charts (Chart.js) for 'Partner Benefits' & 'Academy Benefits' -> Interaction: Hover to see details -> Justification: Breaks down the complex value proposition into digestible, high-level categories for quick understanding.
+        3. Initiatives (List) -> Goal: Organize/Detail -> Viz: Interactive Card Grid (HTML/Tailwind/JS) -> Interaction: Click to expand/reveal details -> Justification: Avoids a long wall of text, allowing users to selectively explore initiatives of interest, improving engagement.
+        4. Case Study (Text) -> Goal: Demonstrate -> Viz: Structured Text Layout -> Interaction: None -> Justification: A clear, narrative format is best for storytelling and demonstrating practical application.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f9fafb; /* Light Grey */
+            color: #111827; /* Near Black */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .sticky-nav {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            transition: background-color 0.3s;
+        }
+        .active-nav {
+            color: #B91C1C; /* Red */
+            font-weight: 700;
+        }
+        .initiative-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .initiative-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .details-content {
+            display: none;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white shadow-sm">
+        <nav id="navbar" class="sticky-nav bg-white/80 backdrop-blur-md border-b border-gray-200">
+            <div class="container mx-auto px-6 py-3">
+                <div class="flex items-center justify-between">
+                    <h1 class="text-xl font-bold text-gray-900">الأكاديمية الوطنية للتدريب</h1>
+                    <div class="hidden md:flex items-center space-x-reverse space-x-8">
+                        <a href="#summary" class="nav-link text-gray-600 hover:text-red-700">الملخص</a>
+                        <a href="#initiatives" class="nav-link text-gray-600 hover:text-red-700">المبادرات</a>
+                        <a href="#tiers" class="nav-link text-gray-600 hover:text-red-700">مستويات الشراكة</a>
+                        <a href="#benefits" class="nav-link text-gray-600 hover:text-red-700">الفوائد</a>
+                        <a href="#case-study" class="nav-link text-gray-600 hover:text-red-700">دراسة حالة</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="summary" class="text-center mb-20 scroll-mt-20">
+            <h2 class="text-4xl font-bold text-red-700 mb-4">مبادرات وشراكات استراتيجية لعملاء الاستشارات التقنية</h2>
+            <p class="max-w-4xl mx-auto text-lg text-gray-700 leading-relaxed">
+                في الأكاديمية الوطنية للتدريب، نؤمن بأن الاستشارة التقنية ليست نهاية المطاف، بل هي بداية رحلة نحو التميز الرقمي. لذلك، نقدم لشركائنا الاستراتيجيين باقة حصرية من المبادرات التي تحول خطط التحول الرقمي إلى واقع ملموس، وتبني قدرات داخلية مستدامة، وتربطكم بمنظومة وطنية متكاملة للابتكار والمعرفة. نحن لا نقدم حلولاً تقنية فحسب، بل نبني معكم منظومة نجاح متكاملة.
+            </p>
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-bold text-red-700 mb-2">بناء القدرات</h3>
+                    <p class="text-gray-600">وصول حصري للمنح الدولية وتطوير الكفاءات بتكلفة صفرية.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-bold text-red-700 mb-2">تسريع الابتكار</h3>
+                    <p class="text-gray-600">ربط تحدياتكم العملية بأفضل العقول البحثية والأكاديمية في مصر.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-bold text-red-700 mb-2">رؤية استباقية</h3>
+                    <p class="text-gray-600">تزويدكم برؤى حصرية حول التوجهات الرقمية الوطنية والسياسات المستقبلية.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="initiatives" class="mb-20 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">مبادراتنا الاستراتيجية السبع</h2>
+                <p class="max-w-2xl mx-auto text-gray-700 mt-2">نقدم باقة متكاملة من المبادرات الحصرية لعملاء الاستشارات التقنية، مصممة لتقديم قيمة مضافة تتجاوز حدود الاستشارة التقليدية. اضغط على أي مبادرة لاستكشاف تفاصيلها.</p>
+            </div>
+            <div id="initiatives-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
+            <div id="initiative-details-container" class="mt-8 bg-white p-8 rounded-lg shadow-lg border border-gray-200 details-content">
+            </div>
+        </section>
+
+        <section id="tiers" class="mb-20 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">مستويات الشراكة التفاعلية</h2>
+                <p class="max-w-2xl mx-auto text-gray-700 mt-2">لتقديم قيمة تتناسب مع حجم كل شراكة، نقترح ثلاثة مستويات لعقود الاستشارات. الرسم البياني التالي يوضح عدد المبادرات المتاحة لكل مستوى، مرر الفأرة فوق الأعمدة لمعرفة المزيد.</p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <div class="chart-container">
+                    <canvas id="tiersChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="benefits" class="mb-20 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">الفوائد المتبادلة</h2>
+                <p class="max-w-2xl mx-auto text-gray-700 mt-2">تهدف شراكتنا إلى تحقيق قيمة استراتيجية لكلا الطرفين. الرسوم البيانية التالية تلخص الفوائد الرئيسية التي تعود على شركائنا وعلى الأكاديمية.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-bold text-center mb-4 text-gray-800">الفوائد العائدة على الشركاء</h3>
+                    <div class="chart-container" style="height: 300px; max-height: 350px;">
+                        <canvas id="partnerBenefitsChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                    <h3 class="text-xl font-bold text-center mb-4 text-gray-800">الفوائد العائدة على الأكاديمية</h3>
+                    <div class="chart-container" style="height: 300px; max-height: 350px;">
+                        <canvas id="academyBenefitsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="case-study" class="scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900">دراسة حالة: وزارة النقل والمواصلات</h2>
+                <p class="max-w-2xl mx-auto text-gray-700 mt-2">لتوضيح الأثر العملي لحزمة مبادراتنا، نستعرض حالة افتراضية لشراكة استراتيجية (المستوى البلاتيني) مع وزارة النقل والمواصلات.</p>
+            </div>
+            <div class="bg-white p-8 rounded-lg shadow-sm border border-gray-200 max-w-5xl mx-auto">
+                <div id="case-study-content">
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-red-800 text-white mt-20">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>&copy; 2025 الأكاديمية الوطنية للتدريب. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+        const initiativesData = [
+            {
+                id: 1,
+                title: "بوابة الفرص",
+                icon: "🎓",
+                summary: "وصول حصري للمنح الدولية.",
+                details: "بحكم مكانتها، تتلقى الأكاديمية فرصًا ومنحًا تدريبية متقدمة من جهات عالمية رائدة. نقدمها كخدمة ذات أولوية لشركائنا، مما يحول عقد الاستشارة إلى مسار تنفيذي لتطوير الكوادر البشرية بأدوات عالمية وبتكلفة صفرية."
+            },
+            {
+                id: 2,
+                title: "جسور الابتكار",
+                icon: " ",
+                summary: "ربط البحث العلمي باحتياجات السوق.",
+                details: "مستوحاة من نجاح الملتقيات العلمية، نهدف لخلق سوق حيوي للأفكار والحلول عبر ملتقى سنوي يجمع بين 'المشكلة' لدى شركائنا و'الحل' لدى الباحثين والمبتكرين، مما يوفر حلولًا بتكلفة تنافسية ويستقطب المواهب."
+            },
+            {
+                id: 3,
+                title: "البيانات المفتوحة",
+                icon: "📊",
+                summary: "المشاركة في تشكيل مستقبل البيانات في مصر.",
+                details: "نهدف لإطلاق أول منصة مصرية للبيانات المفتوحة بالتعاون مع وزارة الاتصالات. سيحصل شركاؤنا على وصول مبكر ورؤى حصرية حول البيانات التي سيتم إتاحتها، مع فرصة فريدة للتأثير في السياسات."
+            },
+            {
+                id: 4,
+                title: "مركز التميز للحكومة الرقمية",
+                icon: "🏛️",
+                summary: "الاستفادة من أحدث الأبحاث الاستراتيجية.",
+                details: "نؤسس هذا المركز ليكون 'الذراع البحثي' للدولة في التحول الرقمي. سيحصل شركاؤنا على وصول حصري للتقارير والدراسات، مما يمنحهم فهمًا عميقًا للتوجهات الحكومية المستقبلية ويضمن توافق استراتيجياتهم."
+            },
+            {
+                id: 5,
+                title: "شراكة بنك المعرفة المصري",
+                icon: "📚",
+                summary: "إتاحة مصادر المعرفة العالمية لدعم الابتكار.",
+                details: "نحول 'محيط' المعلومات في بنك المعرفة إلى 'أنهار' معرفية موجهة. نقوم بتصميم 'باقات معرفية مخصصة' لكل شريك، مما يوفر تكاليف باهظة ويسرّع الابتكار بالبناء على أحدث ما توصل إليه العلم."
+            },
+            {
+                id: 6,
+                title: "التقنية من أجل التمكين",
+                icon: "🤝",
+                summary: "قيادة المسؤولية المجتمعية المؤثرة.",
+                details: "بالشراكة مع أكاديمية ذوي الإعاقة، نقدم استشارات الوصول الرقمي ونموذج الرعاية الاستراتيجية. هذا يسمح لشركائنا بتنفيذ مبادرات مسؤولية مجتمعية ذات أثر حقيقي وتحسين صورة علامتهم التجارية."
+            },
+            {
+                id: 7,
+                title: "شراكة مدينة المعرفة",
+                icon: "🏙️",
+                summary: "الوصول للمواهب والمختبرات التقنية.",
+                details: "نمنح عملاءنا مفتاح الوصول الحصري لمنظومة مدينة المعرفة. نوفر مسارًا سريعًا لتوظيف المواهب، وإمكانية استخدام المختبرات المتقدمة، وخدمة 'خبير تحت الطلب' للاستعانة بالخبرات الأكاديمية العميقة."
+            }
+        ];
+
+        const caseStudyData = {
+            challenge: "تسعى الوزارة لتطوير منظومة نقل ذكية ومتكاملة في العاصمة الإدارية، لكنها تواجه تحديات في نقص الكفاءات المتخصصة في إنترنت الأشياء (IoT) وتحليل البيانات الضخمة، وصعوبة في دمج التقنيات الحديثة.",
+            solution: [
+                { title: "بوابة الفرص", text: "ترشيح 10 مهندسين من كوادر الوزارة لمنحة تدريبية متقدمة في 'تحليل بيانات النقل' مقدمة من AWS، مما يسد فجوة المهارات بتكلفة صفرية." },
+                { title: "جسور الابتكار", text: "طرح 'تحدي ابتكاري' في الملتقى السنوي، مما نتج عنه نموذج أولي من جامعة مصر للمعلوماتية لخوارزمية تتنبأ بالازدحام." },
+                { title: "شراكة مدينة المعرفة", text: "استخدام 'مختبر إنترنت الأشياء' في مدينة المعرفة لبناء وتجربة النموذج الأولي لحلول الدفع الإلكتروني دون الحاجة لشراء معدات باهظة." },
+                { title: "المبادرة الوطنية للبيانات المفتوحة", text: "المشاركة في ورش العمل التشاورية وطلب إعطاء الأولوية لإتاحة بيانات المرور، مما يمكن من بناء شراكات مع القطاع الخاص." },
+                { title: "مركز التميز للحكومة الرقمية", text: "تلقي تقرير استراتيجي حصري حول 'أفضل الممارسات العالمية في إدارة بيانات النقل الذكية'، مما يساعد على بناء منظومة عالمية المستوى." }
+            ],
+            result: "في غضون عام واحد، لم تحصل وزارة النقل فقط على 'خطة استشارية'، بل حصلت على فريق عمل مؤهل، وحل مبتكر قيد التطوير، ووصول لبنية تحتية متطورة، ورؤية استراتيجية واضحة، مما حولها من مجرد 'متلقي خدمة' إلى 'قائد للابتكار' في قطاعها."
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const initiativesGrid = document.getElementById('initiatives-grid');
+            const detailsContainer = document.getElementById('initiative-details-container');
+            let activeCard = null;
+
+            initiativesData.forEach(initiative => {
+                const card = document.createElement('div');
+                card.className = 'initiative-card bg-white p-6 rounded-lg shadow-sm border border-gray-200 cursor-pointer text-center';
+                card.innerHTML = `<div class="text-4xl mb-4">${initiative.icon}</div>
+                                  <h3 class="text-xl font-bold text-gray-800">${initiative.title}</h3>
+                                  <p class="text-gray-600 mt-2">${initiative.summary}</p>`;
+                card.addEventListener('click', () => {
+                    if (activeCard) {
+                        activeCard.classList.remove('ring-2', 'ring-red-600');
+                    }
+                    card.classList.add('ring-2', 'ring-red-600');
+                    activeCard = card;
+
+                    detailsContainer.innerHTML = `<h3 class="text-2xl font-bold mb-4 text-gray-900">${initiative.icon} ${initiative.title}</h3>
+                                                  <p class="text-lg text-gray-700 leading-relaxed">${initiative.details}</p>`;
+                    detailsContainer.style.display = 'block';
+                    detailsContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+                initiativesGrid.appendChild(card);
+            });
+
+            const caseStudyContainer = document.getElementById('case-study-content');
+            let solutionHtml = caseStudyData.solution.map(item => `
+                <div class="mb-4">
+                    <h4 class="text-lg font-bold text-red-700">${item.title}</h4>
+                    <p class="text-gray-700">${item.text}</p>
+                </div>
+            `).join('');
+
+            caseStudyContainer.innerHTML = `
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">التحدي</h3>
+                    <p class="text-gray-700">${caseStudyData.challenge}</p>
+                </div>
+                <div class="mb-6">
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">تفعيل حزمة "ما بعد الاستشارة"</h3>
+                    ${solutionHtml}
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-gray-800 mb-2">النتيجة</h3>
+                    <p class="text-gray-700 font-semibold">${caseStudyData.result}</p>
+                </div>
+            `;
+
+            const tiersCtx = document.getElementById('tiersChart').getContext('2d');
+            new Chart(tiersCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['الشريك الفضي', 'الشريك الذهبي', 'الشريك البلاتيني'],
+                    datasets: [{
+                        label: 'عدد المبادرات المتاحة',
+                        data: [2, 4, 7],
+                        backgroundColor: ['#D1D5DB', '#9CA3AF', '#B91C1C'],
+                        borderColor: ['#9CA3AF', '#6B7280', '#991B1B'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += context.parsed.x;
+                                    }
+                                    return label;
+                                },
+                                afterLabel: function(context) {
+                                    const tier = context.label;
+                                    let services = [];
+                                    if (tier === 'الشريك الفضي') {
+                                        services = ["شراكة بنك المعرفة", "التقنية من أجل التمكين"];
+                                    } else if (tier === 'الشريك الذهبي') {
+                                        services = ["الفضي +", "بوابة الفرص", "شراكة مدينة المعرفة"];
+                                    } else if (tier === 'الشريك البلاتيني') {
+                                        services = ["الذهبي +", "جسور الابتكار", "مركز التميز", "البيانات المفتوحة"];
+                                    }
+                                    return services;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            const partnerBenefitsCtx = document.getElementById('partnerBenefitsChart').getContext('2d');
+            new Chart(partnerBenefitsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['تطوير الكفاءات', 'حلول مبتكرة', 'رؤية استباقية', 'توفير التكاليف'],
+                    datasets: [{
+                        data: [30, 25, 25, 20],
+                        backgroundColor: ['#B91C1C', '#1F2937', '#6B7280', '#9CA3AF'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                    }
+                }
+            });
+
+            const academyBenefitsCtx = document.getElementById('academyBenefitsChart').getContext('2d');
+            new Chart(academyBenefitsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['الريادة الوطنية', 'علاقات استراتيجية', 'دعم الاقتصاد', 'تعظيم الأثر'],
+                    datasets: [{
+                        data: [35, 25, 20, 20],
+                        backgroundColor: ['#B91C1C', '#1F2937', '#6B7280', '#9CA3AF'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                    }
+                }
+            });
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 100) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active-nav');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active-nav');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+ 

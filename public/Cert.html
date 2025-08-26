@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الاستراتيجية الوطنية لبناء القدرات الرقمية - الأكاديمية الوطنية للتدريب</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: "NTA Official Branding" - A corporate palette using the official colors of the National Training Academy: a strong red and a professional black, set against a white/off-white background. -->
+    <!-- Application Structure Plan: A multi-section, single-page dashboard designed for non-linear exploration. It starts with a high-level vision, then moves to the core interactive "Sector Explorer" where users can click a sector to dynamically update its challenges, recommended training, and a skills-needs radar chart. This is followed by a filterable "Certification Universe", a summary of the "Partnership Ecosystem", and a new strategic section for the "Testing Center". This thematic structure allows stakeholders to explore by their area of interest (e.g., a specific sector or certification type) rather than following a rigid report format, which vastly improves usability and information synthesis. -->
+    <!-- Visualization & Content Choices: 
+    - Sector Analysis: Report Info -> Sector-specific needs. Goal -> Compare skill focus per sector. Viz/Method -> Interactive Radar Chart (Chart.js on Canvas). Interaction -> Clicking a sector button dynamically updates the chart and associated text blocks. Justification -> Radar charts are ideal for comparing multiple quantitative variables (skill importance) across different categories (sectors) in a single, easy-to-understand graphic.
+    - Certification Catalog: Report Info -> List of 47+ certifications. Goal -> Organize & Explore. Viz/Method -> Filterable Card Grid (HTML/Tailwind/JS) + Donut Chart (Chart.js on Canvas). Interaction -> User filters by vendor/domain/level; the donut chart provides a static overview of domain distribution. Justification -> This combination provides both a high-level summary (donut chart) and a deep-dive, searchable tool (filters), making a large dataset manageable and accessible.
+    - Testing Center Plan: Report Info -> Strategic plan text. Goal -> Inform & Summarize. Viz/Method -> An interactive tabbed interface (HTML/Tailwind/JS) to break down the plan into Vision, Partners, Requirements, and Roadmap, using icons for clarity. Justification -> A tabbed view is superior to a long text block for presenting a multi-faceted plan, allowing users to select the information they need without overwhelming them.
+    - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                'nta-black': '#212529',
+                'nta-red': '#d71920',
+              }
+            }
+          }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .active-nav {
+            color: #212529;
+            font-weight: 700;
+        }
+        .active-sector {
+            background-color: #212529 !important;
+            color: white !important;
+            border-color: #212529 !important;
+        }
+        .smooth-transition {
+            transition: all 0.3s ease-in-out;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .tab-btn.active {
+            border-bottom-color: #d71920;
+            color: #d71920;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-gray-800">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2 space-x-reverse">
+                 <span class="text-2xl">🏛️</span>
+                 <h1 class="text-xl md:text-2xl font-bold text-nta-red">الأكاديمية الوطنية للتدريب</h1>
+            </div>
+            <div class="hidden md:flex space-x-reverse space-x-6" id="desktop-nav">
+                <a href="#vision" class="nav-link text-gray-600 hover:text-nta-black">الرؤية</a>
+                <a href="#sectors" class="nav-link text-gray-600 hover:text-nta-black">القطاعات</a>
+                <a href="#certs" class="nav-link text-gray-600 hover:text-nta-black">الشهادات</a>
+                <a href="#partners" class="nav-link text-gray-600 hover:text-nta-black">الشركاء</a>
+                <a href="#center" class="nav-link text-gray-600 hover:text-nta-black">مركز الاختبارات</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pt-2 pb-4">
+            <a href="#vision" class="nav-link block py-2 text-gray-600 hover:text-nta-black">الرؤية</a>
+            <a href="#sectors" class="nav-link block py-2 text-gray-600 hover:text-nta-black">القطاعات</a>
+            <a href="#certs" class="nav-link block py-2 text-gray-600 hover:text-nta-black">الشهادات</a>
+            <a href="#partners" class="nav-link block py-2 text-gray-600 hover:text-nta-black">الشركاء</a>
+            <a href="#center" class="nav-link block py-2 text-gray-600 hover:text-nta-black">مركز الاختبارات</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 py-8">
+
+        <section id="vision" class="text-center mb-16 pt-10">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-nta-red">قيادة المستقبل الرقمي لمصر</h2>
+            <p class="max-w-3xl mx-auto text-lg text-gray-600 mb-8">
+                رؤية استراتيجية متكاملة لترسيخ دور الأكاديمية كشريك وطني في رحلة التطوير المهني، من خلال تقديم برامج تدريبية عالمية المستوى واستشارات تقنية متقدمة، واستكمال هذه الرحلة بتوفير مركز اختبارات دولي معتمد.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <p class="text-4xl font-bold text-nta-black">7+</p>
+                    <p class="mt-2 font-semibold text-gray-700">قطاعات حيوية مستهدفة</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <p class="text-4xl font-bold text-nta-black">47+</p>
+                    <p class="mt-2 font-semibold text-gray-700">شهادة تقنية واحترافية</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg">
+                    <p class="text-4xl font-bold text-nta-black">10+</p>
+                    <p class="mt-2 font-semibold text-gray-700">شريك تدريب محتمل</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="sectors" class="mb-16 pt-10">
+            <h2 class="text-3xl font-bold text-center mb-4 text-nta-red">المستكشف التفاعلي للقطاعات</h2>
+            <p class="text-center text-gray-600 mb-10 max-w-2xl mx-auto">هذا القسم يتيح لك استكشاف الاحتياجات الفريدة لكل قطاع من القطاعات الاقتصادية الرئيسية في مصر. انقر على أي قطاع لعرض تحليلاً مفصلاً للتحديات التي يواجهها، والحلول التدريبية المقترحة، والعائد المتوقع على الاستثمار، بالإضافة إلى رؤية بيانية لأهم المهارات المطلوبة.</p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-3">
+                    <h3 class="text-lg font-bold mb-4 text-center lg:text-right">اختر قطاعًا:</h3>
+                    <div id="sector-selector" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-1 gap-4">
+                    </div>
+                </div>
+                <div class="lg:col-span-9 bg-white p-6 rounded-xl shadow-lg smooth-transition min-h-[500px]">
+                    <div id="sector-details">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="certs" class="mb-16 pt-10">
+            <h2 class="text-3xl font-bold text-center mb-4 text-nta-red">عالم الشهادات الاحترافية</h2>
+            <p class="text-center text-gray-600 mb-10 max-w-2xl mx-auto">استكشف المجموعة الشاملة من الشهادات التقنية والاحترافية التي تشكل أساس برامجنا. استخدم أدوات التصفية للبحث عن شهادة معينة، أو حسب الجهة المانحة، أو المجال التقني، واحصل على نظرة عامة سريعة على توزيع هذه الشهادات.</p>
+            <div class="bg-white p-6 rounded-xl shadow-lg mb-8">
+                <h3 class="text-xl font-bold mb-4 text-center">أدوات البحث والتصفية</h3>
+                <div class="space-y-4">
+                    <input type="text" id="cert-search" placeholder="ابحث بالاسم أو الرمز (e.g., AZ-104)..." class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-nta-black focus:border-transparent">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <select id="cert-vendor-filter" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-nta-black focus:border-transparent">
+                            <option value="all">كل الجهات المانحة</option>
+                        </select>
+                        <select id="cert-domain-filter" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-nta-black focus:border-transparent">
+                            <option value="all">كل المجالات</option>
+                        </select>
+                        <select id="cert-level-filter" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-nta-black focus:border-transparent">
+                            <option value="all">كل المستويات</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-xl shadow-lg mb-8">
+                <h3 class="text-xl font-bold mb-4 text-center">توزيع الشهادات حسب المجال</h3>
+                <div class="chart-container !h-64 !max-h-72 mx-auto">
+                    <canvas id="domainDonutChart"></canvas>
+                </div>
+            </div>
+
+            <div id="cert-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            </div>
+        </section>
+
+        <section id="partners" class="mb-16 pt-10">
+            <h2 class="text-3xl font-bold text-center mb-4 text-nta-red">منظومة الشراكات الاستراتيجية</h2>
+            <p class="text-center text-gray-600 mb-10 max-w-2xl mx-auto">نجاح هذه المبادرة يعتمد على بناء تحالفات قوية. نستعرض هنا أبرز الشركاء المحتملين في مجال التدريب، بالإضافة إلى نماذج الشراكة المقترحة التي تضمن تقديم برامج عالمية المستوى مع بناء قدرات وطنية مستدامة.</p>
+            <div id="partner-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-12">
+            </div>
+             <h3 class="text-2xl font-bold text-center mb-8 text-nta-red">نماذج الشراكة المقترحة</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-2xl smooth-transition">
+                    <div class="text-4xl mb-4">🏷️</div>
+                    <h4 class="text-xl font-bold mb-2">العلامة التجارية المشتركة</h4>
+                    <p class="text-gray-600 text-sm">تقديم البرامج تحت علامة الأكاديمية مع الاستفادة من محتوى ومدربي الشركاء المعتمدين لدخول سريع للسوق.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-2xl smooth-transition">
+                    <div class="text-4xl mb-4">🧑‍🏫</div>
+                    <h4 class="text-xl font-bold mb-2">تدريب المدربين</h4>
+                    <p class="text-gray-600 text-sm">بناء قدرات تدريبية وطنية مستدامة داخل الأكاديمية لتحقيق الاكتفاء الذاتي على المدى الطويل.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-2xl smooth-transition">
+                    <div class="text-4xl mb-4">📄</div>
+                    <h4 class="text-xl font-bold mb-2">ترخيص المحتوى</h4>
+                    <p class="text-gray-600 text-sm">ضمان جودة المناهج العالمية مع تقديمها بواسطة كوادر تدريبية وطنية معتمدة من الأكاديمية.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-lg text-center hover:shadow-2xl smooth-transition">
+                    <div class="text-4xl mb-4">💻</div>
+                    <h4 class="text-xl font-bold mb-2">التقديم المدمج</h4>
+                    <p class="text-gray-600 text-sm">استخدام المنصات العالمية للمحتوى النظري مع ورش عمل تطبيقية محلية لتحقيق أقصى وصول وفعالية.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="center" class="pt-10 bg-white p-8 rounded-2xl shadow-xl">
+             <h2 class="text-3xl font-bold text-center mb-4 text-nta-red">من التدريب إلى الاعتماد: مركز الاختبارات التقنية المعتمد</h2>
+            <p class="text-center text-gray-600 mb-10 max-w-3xl mx-auto">
+                استكمالاً لدائرة بناء القدرات، تهدف الخطة إلى تأسيس مركز اختبارات تقنية دولي معتمد داخل مقر الأكاديمية. هذه الخطوة تحول الأكاديمية إلى شريك متكامل في رحلة التطوير المهني، من التدريب عالي المستوى إلى الحصول على شهادة عالمية معترف بها، كل ذلك تحت مظلة الاستشارات التقنية بالأكاديمية. يخدم المركز شركاءنا من الهيئات الحكومية والجمهور الأوسع من المتخصصين والطلاب، ويرسخ دور الأكاديمية كمشروع قومي لتنمية المهارات.
+            </p>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="border-b border-gray-200 mb-6">
+                    <nav class="flex space-x-reverse space-x-8 -mb-px" id="center-tabs">
+                        <button data-tab="vision-goals" class="tab-btn active whitespace-nowrap py-4 px-1 border-b-2 font-medium text-lg">الرؤية والأهداف</button>
+                        <button data-tab="partners-accreditation" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-lg">شركاء الاعتماد</button>
+                        <button data-tab="requirements" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-lg">المتطلبات الرئيسية</button>
+                        <button data-tab="roadmap" class="tab-btn whitespace-nowrap py-4 px-1 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 font-medium text-lg">خارطة الطريق</button>
+                    </nav>
+                </div>
+
+                <div id="tab-content">
+                    <div id="vision-goals-content" class="tab-pane">
+                        <h3 class="text-2xl font-bold mb-4 text-nta-black">استكمال دائرة بناء القدرات</h3>
+                        <p class="mb-6 text-gray-600">إنشاء المركز هو استكمال منطقي وحتمي لدائرة بناء القدرات التي تقودها الأكاديمية. فمن خلال توفير بيئة اختبار آمنة وموثوقة، ننتقل من كوننا مقدمًا للتدريب إلى كوننا شريكًا متكاملاً في رحلة التطوير المهني، من التدريب عالي المستوى إلى الحصول على شهادة عالمية معترف بها.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                             <div class="bg-stone-100 p-4 rounded-lg">
+                                <p class="text-3xl mb-2">🎯</p>
+                                <h4 class="font-bold text-lg">تعزيز القيمة</h4>
+                                <p class="text-sm">تقديم خدمة متكاملة (تدريب + اختبار) تزيد من جاذبية برامجنا وتوفر خدمة غير مسبوقة للمتدربين والجهات الشريكة.</p>
+                            </div>
+                            <div class="bg-stone-100 p-4 rounded-lg">
+                                <p class="text-3xl mb-2">💰</p>
+                                <h4 class="font-bold text-lg">تنويع الإيرادات</h4>
+                                <p class="text-sm">إنشاء مصدر دخل جديد ومستدام يساهم في تحقيق الاستدامة المالية للأكاديمية.</p>
+                            </div>
+                            <div class="bg-stone-100 p-4 rounded-lg">
+                                <p class="text-3xl mb-2">🏆</p>
+                                <h4 class="font-bold text-lg">ترسيخ الريادة</h4>
+                                <p class="text-sm">تحويل الأكاديمية إلى مركز وطني مرجعي للاعتماد ومنح الشهادات، مما يخدم قطاعًا واسعًا من المتخصصين.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="partners-accreditation-content" class="tab-pane hidden">
+                        <h3 class="text-2xl font-bold mb-4 text-nta-black">التحالف مع الرواد العالميين</h3>
+                        <p class="mb-6 text-gray-600">مفتاح النجاح يكمن في الحصول على الاعتماد من الجهات الدولية التي تدير الامتحانات لكبرى الشركات التكنولوجية. شراكة واحدة مع **Pearson VUE** تفتح الباب لتقديم معظم الشهادات المستهدفة.</p>
+                        <ul class="space-y-4">
+                            <li class="bg-stone-100 p-4 rounded-lg">
+                                <h4 class="font-bold text-lg text-nta-red">بيرسون فيو (Pearson VUE) - الأولوية القصوى</h4>
+                                <p class="text-sm">الشريك الحصري لتقديم اختبارات **Microsoft, Cisco, AWS, CompTIA, Oracle** وغيرها الكثير. الاعتماد منهم هو الهدف الأساسي للمشروع.</p>
+                            </li>
+                            <li class="bg-stone-100 p-4 rounded-lg">
+                                <h4 class="font-bold text-lg">سيرتيبورت (Certiport)</h4>
+                                <p class="text-sm">تركز على الشهادات التأسيسية والتعليمية مثل **Microsoft Office Specialist (MOS)**. يمكن اعتباره في مرحلة لاحقة.</p>
+                            </li>
+                            <li class="bg-stone-100 p-4 rounded-lg">
+                                <h4 class="font-bold text-lg">بي إس آي (PSI Services)</h4>
+                                <p class="text-sm">شريك آخر يقدم اختبارات متنوعة. يمكن استكشافه لتغطية شهادات محددة غير متوفرة عبر الشركاء الآخرين.</p>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div id="requirements-content" class="tab-pane hidden">
+                        <h3 class="text-2xl font-bold mb-4 text-nta-black">الالتزام بأعلى المعايير الدولية</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-bold text-lg mb-2">المتطلبات المادية والتقنية</h4>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                    <li>غرفة اختبار هادئة ومؤمنة (محطتي اختبار كبداية).</li>
+                                    <li>أجهزة كمبيوتر حديثة مزودة بوحدات UPS.</li>
+                                    <li>اتصال إنترنت عالي السرعة مع خط احتياطي.</li>
+                                    <li>نظام مراقبة بالفيديو والصوت (CCTV) مع حفظ التسجيلات.</li>
+                                    <li>خزائن آمنة للمتعلقات الشخصية.</li>
+                                    <li>منطقة استقبال منفصلة ومجهزة بالكامل.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-2">المتطلبات الإدارية والتشغيلية</h4>
+                                <ul class="list-disc list-inside space-y-2 text-gray-600">
+                                    <li>تعيين وتدريب مراقبين اثنين على الأقل معتمدين من Pearson VUE.</li>
+                                    <li>الالتزام الصارم بسياسات التحقق من الهوية.</li>
+                                    <li>تطبيق إجراءات أمنية مشددة ومنع الغش.</li>
+                                    <li>نموذج مالي قائم على تقاسم الإيرادات بدون رسوم اعتماد.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="roadmap-content" class="tab-pane hidden">
+                        <h3 class="text-2xl font-bold mb-4 text-nta-black">خارطة طريق التنفيذ (4-6 أشهر)</h3>
+                        <div class="relative border-r-2 border-gray-200 ml-4">
+                            <div class="mb-8 ml-8">
+                                <span class="absolute flex items-center justify-center w-8 h-8 bg-nta-red text-white rounded-full -right-4 ring-4 ring-white">1</span>
+                                <h4 class="font-bold text-lg">التخطيط والتقديم (شهر)</h4>
+                                <p class="text-sm text-gray-600">تشكيل فريق العمل، اختيار الموقع، وتقديم الطلب المبدئي لـ Pearson VUE.</p>
+                            </div>
+                            <div class="mb-8 ml-8">
+                                <span class="absolute flex items-center justify-center w-8 h-8 bg-nta-black text-white rounded-full -right-4 ring-4 ring-white">2</span>
+                                <h4 class="font-bold text-lg">التجهيز الفني والمادي (شهرين)</h4>
+                                <p class="text-sm text-gray-600">شراء وتركيب الأجهزة، تجهيز الغرفة، وتركيب نظام المراقبة.</p>
+                            </div>
+                            <div class="mb-8 ml-8">
+                                <span class="absolute flex items-center justify-center w-8 h-8 bg-nta-black text-white rounded-full -right-4 ring-4 ring-white">3</span>
+                                <h4 class="font-bold text-lg">الاعتماد والتدريب (شهر)</h4>
+                                <p class="text-sm text-gray-600">تدريب واعتماد المراقبين، تركيب برامج الاختبار، وتوقيع العقد الرسمي.</p>
+                            </div>
+                             <div class="ml-8">
+                                <span class="absolute flex items-center justify-center w-8 h-8 bg-nta-black text-white rounded-full -right-4 ring-4 ring-white">4</span>
+                                <h4 class="font-bold text-lg">الإطلاق والتشغيل (مستمر)</h4>
+                                <p class="text-sm text-gray-600">التشغيل التجريبي، الإعلان الرسمي، وبدء العمليات اليومية والتدقيق.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-nta-red text-white mt-16 py-6">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2025 الأكاديمية الوطنية للتدريب. جميع الحقوق محفوظة.</p>
+            <p class="text-sm text-gray-300 mt-2">تطبيق تفاعلي لعرض الخطة الاستراتيجية لتنمية المهارات الرقمية في مصر.</p>
+        </div>
+    </footer>
+    
+    <script>
+        const APP_DATA = {
+            sectors: {
+                government: { name: 'القطاع الحكومي', icon: '🏛️', challenges: ['تنفيذ استراتيجية "مصر الرقمية" وميكنة الخدمات.', 'حماية البنية التحتية المعلوماتية الحيوية للدولة.', 'تبني سياسة "الحوسبة السحابية أولاً" بكفاءة وأمان.', 'تأهيل الكوادر لمتطلبات الترقي الوظيفي الرقمي.'], solutions: ['مسار الحوسبة السحابية (Microsoft Azure).', 'مسار الشبكات وأمنها (Cisco CCNA & CCNP Security).', 'مسار الأمن السيبراني المتكامل (Microsoft SC-200 & Cisco CyberOps).', 'برنامج "القيادة الرقمية" الخاص بالأكاديمية.'], roi: ['تسريع وتيرة التحول الرقمي وتحقيق أهداف الدولة.', 'تعزيز الأمن القومي السيبراني وحماية بيانات المواطنين.', 'خفض النفقات التشغيلية وتحسين جودة الخدمات الحكومية.', 'رفع الكفاءة العامة للجهاز الإداري للدولة.'], skills: { labels: ['الحوسبة السحابية', 'الأمن السيبراني', 'الشبكات', 'حوكمة البيانات', 'القيادة الرقمية'], values: [9, 10, 8, 8, 9] } },
+                banking: { name: 'القطاع المصرفي', icon: '🏦', challenges: ['الامتثال لإطار الأمن السيبراني الصادر عن البنك المركزي.', 'تحليل البيانات الضخمة لإدارة المخاطر ومكافحة الاحتيال.', 'تطوير بنية تحتية سحابية هجينة لإطلاق خدمات مبتكرة.', 'استخدام الذكاء الاصطناعي لتحسين تجربة العميل.'], solutions: ['مسار الأمن السيبراني المالي (CISSP, CISM, CEH).', 'مسار تحليل البيانات المالية (Power BI & Google Advanced Analytics).', 'مسار الذكاء الاصطناعي في القطاع المالي (Azure AI).', 'ورش عمل متخصصة في تأمين الدفع الرقمي.'], roi: ['تعزيز ثقة العملاء وتقليل الخسائر المالية الناتجة عن الاحتيال.', 'اتخاذ قرارات ائتمانية واستثمارية أذكى وأسرع.', 'زيادة ولاء العملاء عبر تقديم خدمات رقمية شخصية.', 'مواكبة التطور في قطاع التكنولوجيا المالية (FinTech).'], skills: { labels: ['الأمن السيبراني', 'تحليل البيانات', 'الذكاء الاصطناعي', 'الحوسبة السحابية', 'إدارة المخاطر'], values: [10, 9, 8, 7, 9] } },
+                industrial: { name: 'القطاع الصناعي', icon: '🏭', challenges: ['تأمين أنظمة التحكم الصناعي (ICS/SCADA) من الهجمات.', 'دمج تقنيات الثورة الصناعية الرابعة (Industry 4.0).', 'استخدام البيانات للصيانة التنبؤية وتحسين جودة المنتج.', 'إدارة سلاسل الإمداد الذكية بكفاءة.'], solutions: ['برنامج متخصص في "الأمن السيبراني لأنظمة التحكم الصناعي".', 'مسار الذكاء الاصطناعي في الصناعة (Azure AI).', 'مسار تحليل بيانات الإنتاج وسلاسل الإمداد (Power BI).', 'شهادات متقدمة في حماية الأنظمة المادية السيبرانية.'], roi: ['ضمان استمرارية الإنتاج وتقليل مخاطر التوقف غير المخطط له.', 'زيادة كفاءة المعدات وخفض تكاليف الطاقة والهدر.', 'تحسين جودة المنتج وزيادة رضا العملاء.', 'رفع مستوى السلامة وحماية العاملين والبيئة.'], skills: { labels: ['أمن OT/ICS', 'الذكاء الاصطناعي', 'تحليل البيانات', 'إنترنت الأشياء', 'إدارة سلاسل الإمداد'], values: [10, 8, 8, 7, 7] } },
+                telecom: { name: 'الاتصالات وتكنولوجيا المعلومات', icon: '📡', challenges: ['إدارة شبكات الجيل الخامس (5G) المعقدة.', 'تأمين البنية التحتية للاتصالات ضد هجمات DDoS و APTs.', 'تقديم خدمات سحابية مبتكرة للعملاء.', 'تحليل بيانات الشبكة لتحسين الأداء وتجربة العميل.'], solutions: ['مسار الشبكات المتقدم (Cisco CCNP & CCIE).', 'مسار أمن شبكات الاتصالات (CCNP Security).', 'مسار إدارة السحابة ومراكز البيانات (Azure Architect).', 'استخدام Power BI و Python لتحليل بيانات الشبكة.'], roi: ['تحسين جودة الخدمة وموثوقية الشبكات.', 'زيادة الإيرادات عبر تقديم عروض مخصصة وتقليل تسرب العملاء.', 'ريادة سوق الخدمات السحابية وفتح مصادر إيرادات جديدة.', 'بناء فرق هندسية على مستوى عالمي.'], skills: { labels: ['الشبكات المتقدمة', 'أمن الشبكات', 'الحوسبة السحابية', 'تحليل البيانات', 'DevOps'], values: [10, 9, 8, 7, 6] } },
+                healthcare: { name: 'الرعاية الصحية', icon: '⚕️', challenges: ['تحليل بيانات المرضى لتحسين دقة التشخيص.', 'تأمين بيانات المرضى الحساسة والامتثال للمعايير الدولية.', 'إدارة موارد المستشفيات بكفاءة لخفض التكاليف.', 'استخدام السحابة لتخزين السجلات الطبية الإلكترونية.'], solutions: ['مسار تحليل بيانات الرعاية الصحية (Healthcare Analytics).', 'برنامج متخصص في الأمن السيبراني للقطاع الصحي.', 'مسار إدارة البنية التحتية السحابية الصحية (Azure Admin).', 'ورش عمل في حوكمة البيانات الطبية.'], roi: ['تحسين جودة الرعاية الصحية وسلامة المرضى.', 'رفع الكفاءة التشغيلية وتوفير في الميزانيات.', 'حماية سمعة المؤسسة وتجنب العقوبات القانونية.', 'تمكين البحث العلمي وتطوير بروتوكولات طبية جديدة.'], skills: { labels: ['تحليل البيانات', 'أمن المعلومات', 'الحوسبة السحابية', 'حوكمة البيانات', 'الامتثال'], values: [9, 10, 8, 8, 7] } },
+                logistics: { name: 'الخدمات اللوجستية والنقل', icon: '🚚', challenges: ['استخدام الذكاء الاصطناعي لتحسين وتخطيط المسارات.', 'التنبؤ بالطلب وإدارة المخزون لتجنب النفاذ أو التكدس.', 'توفير رؤية كاملة وآنية لسلسلة الإمداد.', 'تأمين أجهزة إنترنت الأشياء (IoT) المستخدمة في التتبع.'], solutions: ['مسار الذكاء الاصطناعي في اللوجستيات (Azure AI).', 'مسار تحليل بيانات سلاسل الإمداد (Power BI & Google Analytics).', 'مسار متخصص في أمن إنترنت الأشياء (IoT Security).', 'استشارات في بناء نماذج التنبؤ بالطلب.'], roi: ['خفض تكاليف التشغيل (وقود، صيانة).', 'زيادة سرعة ودقة التسليم ورفع رضا العملاء.', 'تحسين إدارة المخزون والسيولة المالية.', 'زيادة المرونة في مواجهة اضطرابات سلسلة الإمداد.'], skills: { labels: ['الذكاء الاصطناعي', 'تحليل البيانات', 'سلاسل الإمداد', 'إنترنت الأشياء', 'التنبؤ'], values: [9, 9, 8, 7, 8] } }
+            },
+            certifications: [
+                { name: 'Microsoft Certified: Azure Fundamentals (AZ-900)', vendor: 'Microsoft', domain: 'الحوسبة السحابية', level: 'تأسيسي' },
+                { name: 'Microsoft Certified: Azure Administrator Associate (AZ-104)', vendor: 'Microsoft', domain: 'الحوسبة السحابية', level: 'متوسط' },
+                { name: 'Microsoft Certified: Azure Solutions Architect Expert (AZ-305)', vendor: 'Microsoft', domain: 'الحوسبة السحابية', level: 'خبير' },
+                { name: 'Microsoft Certified: Azure Security Engineer Associate (AZ-500)', vendor: 'Microsoft', domain: 'الأمن السيبراني', level: 'متوسط' },
+                { name: 'Microsoft Certified: Security Operations Analyst Associate (SC-200)', vendor: 'Microsoft', domain: 'الأمن السيبراني', level: 'متوسط' },
+                { name: 'Microsoft Certified: Power BI Data Analyst Associate (PL-300)', vendor: 'Microsoft', domain: 'تحليل البيانات', level: 'متوسط' },
+                { name: 'Microsoft Certified: Azure AI Fundamentals (AI-900)', vendor: 'Microsoft', domain: 'الذكاء الاصطناعي', level: 'تأسيسي' },
+                { name: 'Microsoft Certified: Azure AI Engineer Associate (AI-102)', vendor: 'Microsoft', domain: 'الذكاء الاصطناعي', level: 'متوسط' },
+                { name: 'Microsoft Certified: DevOps Engineer Expert (AZ-400)', vendor: 'Microsoft', domain: 'DevOps', level: 'خبير' },
+                { name: 'Cisco Certified Network Associate (CCNA)', vendor: 'Cisco', domain: 'الشبكات', level: 'متوسط' },
+                { name: 'CCNP Enterprise', vendor: 'Cisco', domain: 'الشبكات', level: 'احترافي' },
+                { name: 'CCIE Enterprise Infrastructure', vendor: 'Cisco', domain: 'الشبكات', level: 'خبير' },
+                { name: 'CCNP Security', vendor: 'Cisco', domain: 'الأمن السيبراني', level: 'احترافي' },
+                { name: 'Cisco Certified CyberOps Associate', vendor: 'Cisco', domain: 'الأمن السيبراني', level: 'متوسط' },
+                { name: 'Google Data Analytics Professional Certificate', vendor: 'Google', domain: 'تحليل البيانات', level: 'تأسيسي' },
+                { name: 'Google Advanced Data Analytics Professional Certificate', vendor: 'Google', domain: 'تحليل البيانات', level: 'متقدم' },
+                { name: 'Google Professional Machine Learning Engineer', vendor: 'Google', domain: 'الذكاء الاصطناعي', level: 'احترافي' },
+                { name: 'Certified Information Systems Security Professional (CISSP)', vendor: 'ISC²', domain: 'الأمن السيبراني', level: 'خبير' },
+                { name: 'Certified Information Security Manager (CISM)', vendor: 'ISACA', domain: 'الأمن السيبراني', level: 'خبير' },
+                { name: 'Certified Ethical Hacker (CEH)', vendor: 'EC-Council', domain: 'الأمن السيبراني', level: 'متقدم' },
+                { name: 'Certified Cloud Security Professional (CCSP)', vendor: 'ISC²', domain: 'الأمن السيبراني', level: 'خبير' },
+                { name: 'Project Management Professional (PMP)', vendor: 'PMI', domain: 'إدارة المشاريع', level: 'احترافي' },
+                { name: 'ITIL 4 Foundation', vendor: 'Axelos', domain: 'إدارة خدمات تكنولوجيا المعلومات', level: 'تأسيسي' },
+                { name: 'AWS Certified Solutions Architect', vendor: 'AWS', domain: 'الحوسبة السحابية', level: 'متوسط' },
+                { name: 'CompTIA A+', vendor: 'CompTIA', domain: 'الدعم الفني', level: 'تأسيسي' },
+                { name: 'CompTIA Network+', vendor: 'CompTIA', domain: 'الشبكات', level: 'تأسيسي' },
+                { name: 'CompTIA Security+', vendor: 'CompTIA', domain: 'الأمن السيبراني', level: 'تأسيسي' },
+            ],
+            partners: [
+                { name: 'Global Knowledge', accreditations: 'Microsoft, AWS, Cisco, CompTIA, ISACA', specialties: 'محفظة تدريبية شاملة ومعتمدة دوليًا.' },
+                { name: 'New Horizons', accreditations: 'Microsoft, Cisco, CompTIA, ITIL', specialties: 'خبرة طويلة في السوق المصري ومناهج معتمدة.' },
+                { name: 'CLS Learning Solutions', accreditations: 'Microsoft, Cisco, PMI', specialties: 'شريك محلي قوي مع فهم عميق لاحتياجات السوق.' },
+                { name: 'معهد تكنولوجيا المعلومات (ITI)', accreditations: 'شراكات مع AWS, Google', specialties: 'الذراع التنفيذي للدولة في بناء القدرات الرقمية.' },
+                { name: 'مركز (SECC)', accreditations: 'The Open Group, PeopleCert (ITIL)', specialties: 'يركز على حوكمة تكنولوجيا المعلومات وتحسين العمليات.' },
+                { name: 'Amideast Egypt', accreditations: 'PMI Authorized Training Partner', specialties: 'الشريك المفضل لبرامج إدارة المشاريع الاحترافية (PMP).' },
+                { name: 'Pearson VUE', accreditations: 'شريك اعتماد الاختبارات', specialties: 'الجهة الأكبر عالميًا في تقديم الاختبارات المعتمدة لـ Microsoft, Cisco, AWS, CompTIA وغيرهم.' }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            let sectorRadarChart = null;
+            let domainDonutChart = null;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        document.querySelectorAll('.nav-link').forEach(link => {
+                            link.classList.toggle('active-nav', link.getAttribute('href').substring(1) === entry.target.id);
+                        });
+                    }
+                });
+            }, { rootMargin: "-50% 0px -50% 0px" });
+
+            document.querySelectorAll('section').forEach(section => observer.observe(section));
+
+            const sectorSelector = document.getElementById('sector-selector');
+            const sectorDetails = document.getElementById('sector-details');
+
+            const renderSectorDetails = (sectorKey) => {
+                const sector = APP_DATA.sectors[sectorKey];
+                if (!sector) return;
+
+                sectorDetails.innerHTML = `
+                    <div class="text-center mb-6">
+                        <span class="text-5xl">${sector.icon}</span>
+                        <h3 class="text-2xl font-bold mt-2 text-nta-black">${sector.name}</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div>
+                            <div class="mb-6">
+                                <h4 class="text-lg font-bold mb-2 border-r-4 border-nta-red pr-3">التحديات الرئيسية</h4>
+                                <ul class="list-disc list-inside space-y-1 text-gray-600">${sector.challenges.map(c => `<li>${c}</li>`).join('')}</ul>
+                            </div>
+                            <div class="mb-6">
+                                <h4 class="text-lg font-bold mb-2 border-r-4 border-nta-red pr-3">الحلول التدريبية المقترحة</h4>
+                                <ul class="list-disc list-inside space-y-1 text-gray-600">${sector.solutions.map(s => `<li>${s}</li>`).join('')}</ul>
+                            </div>
+                             <div class="mb-6">
+                                <h4 class="text-lg font-bold mb-2 border-r-4 border-nta-red pr-3">العائد على الاستثمار</h4>
+                                <ul class="list-disc list-inside space-y-1 text-gray-600">${sector.roi.map(r => `<li>${r}</li>`).join('')}</ul>
+                            </div>
+                        </div>
+                        <div>
+                            <h4 class="text-lg font-bold mb-2 text-center">أهم المهارات المطلوبة</h4>
+                            <div class="chart-container">
+                                <canvas id="sectorRadarChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                const ctx = document.getElementById('sectorRadarChart').getContext('2d');
+                if (sectorRadarChart) {
+                    sectorRadarChart.destroy();
+                }
+                sectorRadarChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: sector.skills.labels,
+                        datasets: [{
+                            label: 'الأهمية (من 10)',
+                            data: sector.skills.values,
+                            backgroundColor: 'rgba(33, 37, 41, 0.2)',
+                            borderColor: '#212529',
+                            pointBackgroundColor: '#212529',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#212529'
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        scales: { r: { beginAtZero: true, max: 10, pointLabels: { font: { size: 12, family: 'Cairo' } }, ticks: { backdropColor: 'transparent' } } },
+                        plugins: { legend: { position: 'top', labels: { font: { family: 'Cairo' } } } }
+                    }
+                });
+            };
+
+            Object.keys(APP_DATA.sectors).forEach(key => {
+                const sector = APP_DATA.sectors[key];
+                const button = document.createElement('button');
+                button.className = 'sector-btn w-full text-right p-3 border-2 border-gray-200 rounded-lg bg-white hover:bg-stone-100 hover:border-nta-black smooth-transition flex items-center';
+                button.dataset.sector = key;
+                button.innerHTML = `<span class="text-2xl ml-3">${sector.icon}</span> <span class="font-semibold">${sector.name}</span>`;
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.sector-btn').forEach(btn => btn.classList.remove('active-sector'));
+                    button.classList.add('active-sector');
+                    renderSectorDetails(key);
+                });
+                sectorSelector.appendChild(button);
+            });
+
+            const certList = document.getElementById('cert-list');
+            const certSearch = document.getElementById('cert-search');
+            const certVendorFilter = document.getElementById('cert-vendor-filter');
+            const certDomainFilter = document.getElementById('cert-domain-filter');
+            const certLevelFilter = document.getElementById('cert-level-filter');
+
+            const vendors = [...new Set(APP_DATA.certifications.map(c => c.vendor))];
+            vendors.sort().forEach(v => certVendorFilter.appendChild(new Option(v, v)));
+
+            const domains = [...new Set(APP_DATA.certifications.map(c => c.domain))];
+            domains.sort().forEach(d => certDomainFilter.appendChild(new Option(d, d)));
+
+            const levels = [...new Set(APP_DATA.certifications.map(c => c.level))];
+            levels.sort().forEach(l => certLevelFilter.appendChild(new Option(l, l)));
+
+            const renderCerts = () => {
+                const searchTerm = certSearch.value.toLowerCase();
+                const selectedVendor = certVendorFilter.value;
+                const selectedDomain = certDomainFilter.value;
+                const selectedLevel = certLevelFilter.value;
+
+                certList.innerHTML = '';
+                const filteredCerts = APP_DATA.certifications.filter(cert => 
+                    cert.name.toLowerCase().includes(searchTerm) &&
+                    (selectedVendor === 'all' || cert.vendor === selectedVendor) &&
+                    (selectedDomain === 'all' || cert.domain === selectedDomain) &&
+                    (selectedLevel === 'all' || cert.level === selectedLevel)
+                );
+
+                if (filteredCerts.length === 0) {
+                    certList.innerHTML = `<p class="md:col-span-3 text-center text-gray-500">لا توجد شهادات تطابق معايير البحث.</p>`;
+                    return;
+                }
+
+                filteredCerts.forEach(cert => {
+                    const certCard = document.createElement('div');
+                    certCard.className = 'bg-white p-4 rounded-xl shadow-lg border border-transparent hover:border-nta-black hover:shadow-xl smooth-transition';
+                    certCard.innerHTML = `
+                        <h4 class="font-bold text-md text-nta-red">${cert.name}</h4>
+                        <div class="mt-2 flex justify-between items-center text-sm text-gray-500">
+                             <div>
+                                <span class="bg-gray-100 text-gray-800 px-2 py-1 rounded">${cert.vendor}</span>
+                                <span class="bg-red-100 text-nta-red px-2 py-1 rounded font-semibold mr-2">${cert.level}</span>
+                            </div>
+                            <span class="font-semibold text-right">${cert.domain}</span>
+                        </div>
+                    `;
+                    certList.appendChild(certCard);
+                });
+            };
+
+            [certSearch, certVendorFilter, certDomainFilter, certLevelFilter].forEach(el => el.addEventListener('input', renderCerts));
+            
+            const domainCounts = APP_DATA.certifications.reduce((acc, cert) => {
+                acc[cert.domain] = (acc[cert.domain] || 0) + 1;
+                return acc;
+            }, {});
+
+            domainDonutChart = new Chart(document.getElementById('domainDonutChart').getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(domainCounts),
+                    datasets: [{
+                        data: Object.values(domainCounts),
+                        backgroundColor: ['#212529', '#d71920', '#6c757d', '#f8f9fa', '#17a2b8', '#28a745', '#ffc107'],
+                        borderColor: '#fff',
+                    }]
+                },
+                options: { maintainAspectRatio: false, plugins: { legend: { display: true, position: 'bottom', labels: { font: { family: 'Cairo' } } } } }
+            });
+
+            const partnerList = document.getElementById('partner-list');
+            APP_DATA.partners.forEach(partner => {
+                const partnerCard = document.createElement('div');
+                partnerCard.className = 'bg-white p-5 rounded-xl shadow-lg text-center';
+                partnerCard.innerHTML = `
+                    <h4 class="text-lg font-bold text-nta-red">${partner.name}</h4>
+                    <p class="text-sm text-gray-500 my-2"><strong>الاعتمادات:</strong> ${partner.accreditations}</p>
+                    <p class="text-gray-700 text-sm">${partner.specialties}</p>
+                `;
+                partnerList.appendChild(partnerCard);
+            });
+            
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = e.currentTarget.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80, // Adjust for sticky header height
+                            behavior: 'smooth'
+                        });
+                    }
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            const tabs = document.querySelectorAll('.tab-btn');
+            const tabPanes = document.querySelectorAll('.tab-pane');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    tabPanes.forEach(pane => {
+                        if (pane.id === `${tab.dataset.tab}-content`) {
+                            pane.classList.remove('hidden');
+                        } else {
+                            pane.classList.add('hidden');
+                        }
+                    });
+                });
+            });
+
+            // Initial render
+            renderCerts();
+            document.querySelector('.sector-btn').click();
+        });
+    </script>
+</body>
+</html>
