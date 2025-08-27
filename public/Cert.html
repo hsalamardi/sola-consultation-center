@@ -627,6 +627,15 @@
             // Initial render
             renderCerts();
             document.querySelector('.sector-btn').click();
+            
+            // Main navigation mobile menu toggle
+            const mainMobileMenuButton = document.getElementById('main-mobile-menu-button');
+            const mainMobileMenu = document.getElementById('main-mobile-menu');
+            if (mainMobileMenuButton && mainMobileMenu) {
+                mainMobileMenuButton.addEventListener('click', () => {
+                    mainMobileMenu.classList.toggle('hidden');
+                });
+            }
         });
     </script>
 </body>
