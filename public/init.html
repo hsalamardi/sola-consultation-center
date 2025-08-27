@@ -63,11 +63,100 @@
 </head>
 <body class="antialiased">
 
+    <!-- Main Navigation Header -->
+    <nav class="bg-gradient-to-r from-slate-800 to-slate-900 shadow-2xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo and Brand -->
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <div class="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-white font-bold text-lg leading-tight">الأكاديمية الوطنية للتدريب</h1>
+                        <p class="text-red-400 text-sm font-medium">الاستشارات التقنية</p>
+                    </div>
+                </div>
+                
+                <!-- Main Navigation Links -->
+                <div class="hidden md:flex items-center space-x-reverse space-x-6">
+                    <a href="index.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                        <span class="font-medium">الرئيسية</span>
+                    </a>
+                    <a href="ai.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                        <span class="font-medium">الذكاء الاصطناعي</span>
+                    </a>
+                    <a href="Cert.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                        <span class="font-medium">الشهادات</span>
+                    </a>
+                    <a href="data.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                        <span class="font-medium">مركز البيانات</span>
+                    </a>
+                    <a href="infra.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path>
+                        </svg>
+                        <span class="font-medium">البنية التحتية</span>
+                    </a>
+                    <a href="init.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-white bg-red-600 rounded-lg shadow-lg">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <span class="font-semibold">المبادرات</span>
+                    </a>
+                    <a href="software.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                        <span class="font-medium">البرمجيات</span>
+                    </a>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="main-mobile-menu-button" class="text-slate-300 hover:text-white focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="main-mobile-menu" class="md:hidden hidden bg-slate-800 border-t border-slate-700">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">الرئيسية</a>
+                <a href="ai.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">الذكاء الاصطناعي</a>
+                <a href="Cert.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">الشهادات</a>
+                <a href="data.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">مركز البيانات</a>
+                <a href="infra.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">البنية التحتية</a>
+                <a href="init.html" class="block px-3 py-2 text-white bg-red-600 rounded-md font-semibold">المبادرات</a>
+                <a href="software.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">البرمجيات</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Navigation -->
     <header class="bg-white shadow-sm">
-        <nav id="navbar" class="sticky-nav bg-white/80 backdrop-blur-md border-b border-gray-200">
+        <nav id="navbar" class="sticky-nav bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-16 z-40">
             <div class="container mx-auto px-6 py-3">
                 <div class="flex items-center justify-between">
-                    <h1 class="text-xl font-bold text-gray-900">الأكاديمية الوطنية للتدريب</h1>
+                    <h2 class="text-xl font-bold text-gray-900">المبادرات الاستراتيجية</h2>
                     <div class="hidden md:flex items-center space-x-reverse space-x-8">
                         <a href="#summary" class="nav-link text-gray-600 hover:text-red-700">الملخص</a>
                         <a href="#initiatives" class="nav-link text-gray-600 hover:text-red-700">المبادرات</a>
@@ -84,9 +173,17 @@
 
         <section id="summary" class="text-center mb-20 scroll-mt-20">
             <h2 class="text-4xl font-bold text-red-700 mb-4">مبادرات وشراكات استراتيجية لعملاء الاستشارات التقنية</h2>
-            <p class="max-w-4xl mx-auto text-lg text-gray-700 leading-relaxed">
+            <p class="max-w-4xl mx-auto text-lg text-gray-700 leading-relaxed mb-8">
                 في الأكاديمية الوطنية للتدريب، نؤمن بأن الاستشارة التقنية ليست نهاية المطاف، بل هي بداية رحلة نحو التميز الرقمي. لذلك، نقدم لشركائنا الاستراتيجيين باقة حصرية من المبادرات التي تحول خطط التحول الرقمي إلى واقع ملموس، وتبني قدرات داخلية مستدامة، وتربطكم بمنظومة وطنية متكاملة للابتكار والمعرفة. نحن لا نقدم حلولاً تقنية فحسب، بل نبني معكم منظومة نجاح متكاملة.
             </p>
+            <div class="mb-8">
+                <a href="init.pdf" download class="bg-red-700 hover:bg-red-800 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200 inline-flex items-center space-x-2 space-x-reverse shadow-lg hover:shadow-xl">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>تحميل تقرير المبادرات PDF</span>
+                </a>
+            </div>
             <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
                 <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                     <h3 class="text-xl font-bold text-red-700 mb-2">بناء القدرات</h3>
@@ -208,7 +305,7 @@
                 title: "التقنية من أجل التمكين",
                 icon: "🤝",
                 summary: "قيادة المسؤولية المجتمعية المؤثرة.",
-                details: "بالشراكة مع أكاديمية ذوي الإعاقة، نقدم استشارات الوصول الرقمي ونموذج الرعاية الاستراتيجية. هذا يسمح لشركائنا بتنفيذ مبادرات مسؤولية مجتمعية ذات أثر حقيقي وتحسين صورة علامتهم التجارية."
+                details: "بالشراكة مع الأكاديمية الوطنية للأشخاص ذوي الإعاقة، نقدم استشارات الوصول الرقمي ونموذج الرعاية الاستراتيجية. هذا يسمح لشركائنا بتنفيذ مبادرات مسؤولية مجتمعية ذات أثر حقيقي وتحسين صورة علامتهم التجارية."
             },
             {
                 id: 7,
@@ -400,6 +497,12 @@
                     }
                 });
             });
+        });
+
+        // Mobile menu toggle for main navigation
+        document.getElementById('main-mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('main-mobile-menu');
+            mobileMenu.classList.toggle('hidden');
         });
     </script>
 </body>

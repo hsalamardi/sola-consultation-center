@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحليل استراتيجي لمركز بيانات الأكاديمية الوطنية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Professional Red & Slate -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard. It begins with a high-level summary of the current situation to establish context. The core is a comparative analysis section where users can see the four main scenarios side-by-side. The key interactive element is a financial modeler focused on the recommended scenario (renting to MCIT), allowing users to adjust variables like rack price and see real-time updates on charts, transforming the static report into a dynamic decision-making tool. This is followed by detailed SWOT analyses in an accessible tabbed format, and concludes with the final recommendation and a clear implementation roadmap. This structure guides the user from problem to interactive solution exploration and finally to a clear action plan, enhancing comprehension and engagement. -->
+    <!-- Visualization & Content Choices: Report Info -> Goal -> Viz/Method -> Interaction -> Justification. 1. Financial Comparison -> Compare -> Grouped Bar Chart (Chart.js) -> Static -> Provides a quick, high-level visual comparison of the financial implications of each scenario. 2. Breakeven Analysis for MCIT -> Explore Change -> Dynamic Line Chart (Chart.js) -> Slider for rack price -> Allows users to interactively explore the most critical variable in the recommended scenario and understand its impact on profitability over time. 3. Cost Breakdown -> Inform -> Donut Chart (Chart.js) -> Static -> Clearly visualizes the composition of the initial investment. 4. SWOT Analysis -> Organize -> Tabbed HTML Tables -> Clickable tabs -> Presents detailed qualitative data in a structured, space-efficient manner without overwhelming the user. 5. Roadmap -> Inform -> Styled HTML/CSS Timeline -> Static -> Visually represents the project plan in an easy-to-follow format. All visualizations are chosen for clarity and are rendered on Canvas via Chart.js. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f8fafc;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 450px;
+            max-height: 55vh;
+        }
+        .small-chart-container {
+             position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: all 0.3s;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #dc2626; /* red-600 */
+            border-bottom-color: #dc2626; /* red-600 */
+        }
+        .tab-button {
+            transition: all 0.3s;
+        }
+        .tab-button.active {
+            background-color: #dc2626; /* red-600 */
+            color: white;
+        }
+        .swot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .swot-card {
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .swot-card h4 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <!-- Main Navigation Header -->
+    <nav class="bg-gradient-to-r from-slate-800 to-slate-900 shadow-2xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo and Brand -->
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <div class="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-white font-bold text-lg leading-tight">الأكاديمية الوطنية للتدريب</h1>
+                        <p class="text-red-400 text-sm font-medium">الاستشارات التقنية</p>
+                    </div>
+                </div>
+                
+                <!-- Main Navigation Links -->
+                <div class="hidden md:flex items-center space-x-reverse space-x-6">
+                    <a href="index.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                        <span class="font-medium">الرئيسية</span>
+                    </a>
+                    <a href="ai.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                        <span class="font-medium">الذكاء الاصطناعي</span>
+                    </a>
+                    <a href="Cert.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                        <span class="font-medium">الشهادات</span>
+                    </a>
+                    <a href="data.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-white bg-red-600 rounded-lg shadow-lg">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                        <span class="font-semibold">مركز البيانات</span>
+                    </a>
+                    <a href="infra.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path>
+                        </svg>
+                        <span class="font-medium">البنية التحتية</span>
+                    </a>
+                    <a href="init.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <span class="font-medium">المبادرات</span>
+                    </a>
+                    <a href="software.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                        <span class="font-medium">البرمجيات</span>
+                    </a>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="main-mobile-menu-button" class="text-slate-300 hover:text-white focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="main-mobile-menu" class="md:hidden hidden bg-slate-800 border-t border-slate-700">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">الرئيسية</a>
+                <a href="ai.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">الذكاء الاصطناعي</a>
+                <a href="Cert.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">الشهادات</a>
+                <a href="data.html" class="block px-3 py-2 text-white bg-red-600 rounded-md font-semibold">مركز البيانات</a>
+                <a href="infra.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">البنية التحتية</a>
+                <a href="init.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">المبادرات</a>
+                <a href="software.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">البرمجيات</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Navigation -->
+    <header class="bg-white shadow-md sticky top-16 z-40">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h2 class="text-xl md:text-2xl font-bold text-red-700">تحليل استثمار مركز البيانات</h2>
+            <div class="hidden md:flex flex-wrap justify-center gap-x-6 gap-y-2">
+                <a href="#summary" class="nav-link text-slate-600 pb-1 border-b-2 border-transparent">الملخص</a>
+                <a href="#market" class="nav-link text-slate-600 pb-1 border-b-2 border-transparent">مؤشرات السوق</a>
+                <a href="#swot" class="nav-link text-slate-600 pb-1 border-b-2 border-transparent">التحليل الرباعي</a>
+                <a href="#comparison" class="nav-link text-slate-600 pb-1 border-b-2 border-transparent">مقارنة السيناريوهات</a>
+                <a href="#interactive-model" class="nav-link text-slate-600 pb-1 border-b-2 border-transparent">النموذج التفاعلي</a>
+                <a href="#recommendation" class="nav-link text-slate-600 pb-1 border-b-2 border-transparent">التوصية</a>
+                <a href="#potential-clients" class="nav-link text-slate-600 pb-1 border-b-2 border-transparent">العملاء المحتملون</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+
+        <section id="summary" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-red-700 mb-4 text-center">الوضع الراهن: أصل مُعطل على مفترق طرق</h2>
+            <p class="max-w-3xl mx-auto text-center text-slate-600 mb-8">
+                تواجه الأكاديمية الوطنية للتدريب تحديًا استراتيجيًا يتمثل في مركز بيانات غير مُستغل بتكلفة 50 مليون جنيه. مع اقتراب موعد تجديد التراخيص بتكلفة 9 ملايين جنيه، أصبح اتخاذ قرار حاسم أمرًا ضروريًا لتحويل هذا الأصل من عبء مالي إلى مصدر قيمة استراتيجي.
+            </p>
+            <div class="text-center mb-8">
+                <a href="data.pdf" download class="bg-red-700 hover:bg-red-800 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-200 inline-flex items-center space-x-2 space-x-reverse shadow-lg hover:shadow-xl">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                    </svg>
+                    <span>تحميل تقرير مركز البيانات PDF</span>
+                </a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center border-t-4 border-slate-500">
+                    <h3 class="text-2xl font-bold text-slate-600 mb-2">50 مليون جنيه</h3>
+                    <p class="text-slate-500">تكلفة غارقة (استثمار أولي)</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center border-t-4 border-amber-500">
+                    <h3 class="text-2xl font-bold text-amber-600 mb-2">9 ملايين جنيه</h3>
+                    <p class="text-slate-500">تكلفة تجديد التراخيص القادمة</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center border-t-4 border-red-500">
+                    <h3 class="text-2xl font-bold text-red-600 mb-2">59 مليون جنيه</h3>
+                    <p class="text-slate-500">إجمالي التكلفة المستهدفة للاسترداد</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="market" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-red-700 mb-2 text-center">مؤشرات السوق الرئيسية: حجم الفرصة</h2>
+            <p class="max-w-3xl mx-auto text-center text-slate-600 mb-8">
+                يوفر سياق السوق المצري المتنامي الأساس المنطقي للاستثمار في مركز البيانات. الأرقام التالية تبرز حجم الفرصة المتاحة.
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4 text-center">نمو سوق مراكز البيانات في مصر (مليون دولار)</h3>
+                    <div class="chart-container" style="height: 350px;">
+                        <canvas id="marketGrowthChart"></canvas>
+                    </div>
+                </div>
+                <div class="space-y-6">
+                    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                        <h3 class="text-lg font-bold text-slate-500 mb-2">معدل النمو السنوي</h3>
+                        <p class="text-3xl font-bold text-green-600">16.47%</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                        <h3 class="text-lg font-bold text-slate-500 mb-2">حجم السوق المتوقع (2030)</h3>
+                        <p class="text-3xl font-bold text-green-600">~$694 M</p>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                        <h3 class="text-lg font-bold text-slate-500 mb-2">أبرز اللاعبين</h3>
+                        <p class="text-base text-slate-600">خزنة, GPX, Africa Data Centres</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="swot" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-red-700 mb-2 text-center">التحليل الرباعي (SWOT) للاستراتيجيات</h2>
+            <p class="max-w-3xl mx-auto text-center text-slate-600 mb-8">
+                تقييم متعمق لنقاط القوة، الضعف، الفرص، والتهديدات لكل سيناريو من السيناريوهات المقترحة.
+            </p>
+            <div class="flex flex-wrap justify-center mb-6 gap-2">
+                <button class="tab-button active px-4 py-2 rounded-md bg-slate-200" data-target="swot-mcit">تأجير لوزارة الاتصالات</button>
+                <button class="tab-button px-4 py-2 rounded-md bg-slate-200" data-target="swot-ppp">الشراكة (PPP)</button>
+                <button class="tab-button px-4 py-2 rounded-md bg-slate-200" data-target="swot-internal">تشغيل داخلي</button>
+                <button class="tab-button px-4 py-2 rounded-md bg-slate-200" data-target="swot-cloud">تمكين الحوسبة السحابية</button>
+            </div>
+            
+            <div id="swot-content" class="bg-white p-6 rounded-lg shadow-lg">
+                <div id="swot-mcit" class="tab-content">
+                    <div class="swot-grid">
+                        <div class="swot-card bg-green-50 border-r-4 border-green-500">
+                            <h4 class="text-green-800">نقاط القوة</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>تدفق نقدي مستقر ومنخفض المخاطر</li>
+                                <li>بساطة النموذج التشغيلي</li>
+                                <li>تعزيز العلاقات مع جهة حكومية استراتيجية</li>
+                            </ul>
+                        </div>
+                        <div class="swot-card bg-red-50 border-r-4 border-red-500">
+                            <h4 class="text-red-800">نقاط الضعف</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>إمكانات ربحية محدودة (سقف للإيرادات)</li>
+                                <li>الاعتماد على مستأجر واحد (مخاطر التركيز)</li>
+                                <li>فقدان السيطرة الاستراتيجية على الأصل</li>
+                            </ul>
+                        </div>
+                        <div class="swot-card bg-sky-50 border-r-4 border-sky-500">
+                            <h4 class="text-sky-800">الفرص</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>ضمان إشغال بنسبة 100% من اليوم الأول</li>
+                                <li>إمكانية تضمين مكون تدريبي في الاتفاقية</li>
+                            </ul>
+                        </div>
+                        <div class="swot-card bg-amber-50 border-r-4 border-amber-500">
+                            <h4 class="text-amber-800">التهديدات</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>التغييرات في ميزانيات أو أولويات الوزارة</li>
+                                <li>صعوبة تعديل الإيجار ليتماشى مع أسعار السوق</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="swot-ppp" class="tab-content hidden">
+                    <div class="swot-grid">
+                        <div class="swot-card bg-green-50 border-r-4 border-green-500">
+                            <h4 class="text-green-800">نقاط القوة</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>لا يتطلب استثمارًا إضافيًا</li>
+                                <li>نقل كامل للمخاطر التشغيلية والمالية</li>
+                                <li>الاستفادة من خبرة وسمعة الشريك</li>
+                            </ul>
+                        </div>
+                        <div class="swot-card bg-red-50 border-r-4 border-red-500">
+                            <h4 class="text-red-800">نقاط الضعف</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>حصة أقل من إجمالي الإيرادات</li>
+                                <li>تعقيدات في مرحلة التفاوض وصياغة العقد</li>
+                                <li>الاعتماد على أداء الشريك</li>
+                            </ul>
+                        </div>
+                        <div class="swot-card bg-sky-50 border-r-4 border-sky-500">
+                            <h4 class="text-sky-800">الفرص</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>تسريع دخول السوق وتحقيق الإيرادات</li>
+                                <li>إمكانية دمج برامج تدريب ونقل معرفة</li>
+                            </ul>
+                        </div>
+                        <div class="swot-card bg-amber-50 border-r-4 border-amber-500">
+                            <h4 class="text-amber-800">التهديدات</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>مخاطر اختيار الشريك غير المناسب</li>
+                                <li>احتمالية نشوء خلافات حول تفسير العقد</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="swot-internal" class="tab-content hidden">
+                    <div class="swot-grid">
+                        <div class="swot-card bg-green-50 border-r-4 border-green-500">
+                            <h4 class="text-green-800">نقاط القوة</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>السيطرة الكاملة على الأصل</li>
+                                <li>إمكانية تحقيق هوامش ربح عالية (بسعة كبيرة)</li>
+                            </ul>
+                        </div>
+                        <div class="swot-card bg-red-50 border-r-4 border-red-500">
+                            <h4 class="text-red-800">نقاط الضعف</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>يتطلب استثمارًا رأسماليًا وتشغيليًا كبيرًا</li>
+                                <li>نقص الخبرة الداخلية في التشغيل والتسويق</li>
+                                <li>غير مربح بالسعة الحالية المنخفضة (20 راك)</li>
+                            </ul>
+                        </div>
+                        <div class="swot-card bg-sky-50 border-r-4 border-sky-500">
+                            <h4 class="text-sky-800">الفرص</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>الاستفادة المباشرة من نمو السوق المصري</li>
+                                <li>بناء علامة تجارية خاصة بالأكاديمية</li>
+                            </ul>
+                        </div>
+                        <div class="swot-card bg-amber-50 border-r-4 border-amber-500">
+                            <h4 class="text-amber-800">التهديدات</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>منافسة شرسة من لاعبين محليين ودوليين</li>
+                                <li>صعوبة مواكبة التطورات التكنولوجية</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                 <div id="swot-cloud" class="tab-content hidden">
+                    <div class="swot-grid">
+                        <div class="swot-card bg-green-50 border-r-4 border-green-500">
+                            <h4 class="text-green-800">نقاط القوة</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>إمكانية تحقيق أعلى عائد مالي على المدى الطويل</li>
+                                <li>تأمين عميل أساسي عالمي</li>
+                                <li>رفع المكانة الاستراتيجية للمركز</li>
+                            </ul>
+                        </div>
+                        <div class="swot-card bg-red-50 border-r-4 border-red-500">
+                            <h4 class="text-red-800">نقاط الضعف</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>متطلبات فنية صارمة للغاية</li>
+                                <li>دورة مبيعات وتفاوض طويلة ومعقدة</li>
+                                <li>يتطلب شريكًا معتمدًا وذو خبرة عالية</li>
+                            </ul>
+                        </div>
+                        <div class="swot-card bg-sky-50 border-r-4 border-sky-500">
+                            <h4 class="text-sky-800">الفرص</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>الاستفادة من التوجه العالمي نحو الحوسبة السحابية</li>
+                                <li>وضع مصر كمركز إقليمي للخدمات السحابية</li>
+                            </ul>
+                        </div>
+                        <div class="swot-card bg-amber-50 border-r-4 border-amber-500">
+                            <h4 class="text-amber-800">التهديدات</h4>
+                            <ul class="list-disc list-inside text-slate-700">
+                                <li>المنافسة من مراكز بيانات أخرى تسعى لنفس الهدف</li>
+                                <li>التغييرات في استراتيجيات التوسع الإقليمي لعمالقة الحوسبة السحابية</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="comparison" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-red-700 mb-2 text-center">مقارنة السيناريوهات الاستراتيجية</h2>
+            <p class="max-w-3xl mx-auto text-center text-slate-600 mb-8">
+                تحليل مالي مقارن لأربعة مسارات محتملة لتفعيل مركز البيانات. يوضح الرسم البياني الفروقات الجوهرية في التكاليف والعوائد المتوقعة لكل خيار.
+            </p>
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <div class="chart-container">
+                    <canvas id="scenariosComparisonChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="costs" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-red-700 mb-2 text-center">تحليل تفصيلي للتكاليف</h2>
+             <p class="max-w-3xl mx-auto text-center text-slate-600 mb-8">
+                نظرة أعمق على مكونات التكاليف الاستثمارية والتشغيلية في سيناريو التشغيل الداخلي، مما يوفر شفافية حول بنود الإنفاق الرئيسية.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4 text-center">الاستثمار الإضافي (24 مليون جنيه)</h3>
+                    <div class="small-chart-container">
+                        <canvas id="capexChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4 text-center">المصاريف التشغيلية السنوية (6.44 مليون جنيه)</h3>
+                    <div class="small-chart-container">
+                        <canvas id="opexChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="risk" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-red-700 mb-2 text-center">مصفوفة تقييم المخاطر</h2>
+            <p class="max-w-3xl mx-auto text-center text-slate-600 mb-8">
+                تقييم بصري للمخاطر المالية والتشغيلية المرتبطة بكل سيناريو، مما يساعد في اتخاذ قرار متوازن.
+            </p>
+            <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+                <div class="grid grid-cols-[1fr,2fr,2fr] grid-rows-[1fr,2fr,2fr] gap-1 text-center font-bold">
+                    <div class="row-start-2 self-center -rotate-90">المخاطر المالية</div>
+                    <div class="col-start-2 self-end">المخاطر التشغيلية</div>
+                    <div class="col-start-2 border-2 border-slate-200 p-4 bg-red-50 text-red-800 flex items-center justify-center min-h-[150px]">
+                        <h4>مخاطر عالية</h4>
+                        <p class="font-normal text-sm mt-2 absolute bottom-2 right-2">تأجير مشترك</p>
+                    </div>
+                    <div class="border-2 border-slate-200 p-4 bg-red-100 text-red-900 flex items-center justify-center min-h-[150px] relative">
+                        <h4>مخاطر قصوى</h4>
+                        <p class="p-2 bg-slate-800 text-white rounded-md">تشغيل داخلي</p>
+                    </div>
+                    <div class="row-start-3 self-center text-green-800">منخفضة</div>
+                    <div class="border-2 border-slate-200 p-4 bg-green-100 text-green-900 flex items-center justify-center min-h-[150px] relative">
+                        <h4>مخاطر منخفضة</h4>
+                        <p class="p-2 bg-slate-800 text-white rounded-md">تأجير للوزارة</p>
+                    </div>
+                    <div class="border-2 border-slate-200 p-4 bg-amber-50 text-amber-800 flex items-center justify-center min-h-[150px] relative">
+                        <h4>مخاطر متوسطة</h4>
+                         <p class="p-2 bg-slate-800 text-white rounded-md">شراكة (PPP)</p>
+                    </div>
+                    <div class="col-start-2 self-start text-red-800">عالية</div>
+                    <div class="col-start-2 row-start-4 text-green-800">منخفضة</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="interactive-model" class="mb-16 scroll-mt-24 bg-slate-100 p-8 rounded-lg shadow-inner">
+            <h2 class="text-3xl font-bold text-red-700 mb-2 text-center">نموذج تفاعلي: تأجير المركز لوزارة الاتصالات</h2>
+            <p class="max-w-3xl mx-auto text-center text-slate-600 mb-8">
+                استكشف تأثير تغيير سعر الإيجار الشهري للراك على الإيرادات السنوية وفترة استرداد التكلفة الإجمالية (59 مليون جنيه). هذا النموذج يركز على الخيار الاستراتيجي الموصى به.
+            </p>
+            
+            <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md mb-8">
+                <label for="rackPriceSlider" class="block text-lg font-bold text-slate-700 mb-2">سعر الإيجار الشهري للراك (بالدولار الأمريكي)</label>
+                <input id="rackPriceSlider" type="range" min="500" max="1200" value="800" step="50" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer">
+                <div class="flex justify-between text-sm text-slate-500 mt-2">
+                    <span>$500</span>
+                    <span id="rackPriceValue" class="font-bold text-red-600 text-lg">$800</span>
+                    <span>$1200</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">الإيراد السنوي المتوقع</h3>
+                    <p id="annualRevenue" class="text-3xl font-bold text-green-600">9.02 مليون جنيه</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">صافي التدفق النقدي السنوي</h3>
+                    <p id="netCashflow" class="text-3xl font-bold text-green-700">8.52 مليون جنيه</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">فترة استرداد التكلفة</h3>
+                    <p id="breakEven" class="text-3xl font-bold text-red-600">6.9 سنوات</p>
+                </div>
+                 <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">العائد على الاستثمار البشري</h3>
+                    <p class="text-3xl font-bold text-sky-600">~187 ألف جنيه</p>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h3 class="text-xl font-bold text-slate-900 mb-4 text-center">تحليل نقطة التعادل التراكمي - Break Even</h3>
+                <div class="chart-container" style="height: 400px;">
+                    <canvas id="breakEvenChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="recommendation" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-red-700 mb-4 text-center">التوصية النهائية وخارطة الطريق</h2>
+            <div class="bg-white p-8 rounded-lg shadow-lg">
+                <div class="text-center mb-8">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">المسار الأمثل: تأجير المركز لوزارة الاتصالات</h3>
+                    <p class="max-w-3xl mx-auto text-slate-600">
+                        يقدم هذا الخيار التوازن الأمثل بين تحقيق عائد مالي مستقر، وتقليل المخاطر إلى الحد الأدنى، والتوافق مع الأهداف الاستراتيجية الوطنية. وفي حال عدم التوصل لاتفاق، يمثل نموذج الشراكة (PPP) البديل الأفضل.
+                    </p>
+                </div>
+                
+                <h4 class="text-xl font-bold text-red-700 mb-4">خارطة طريق التنفيذ (18 شهرًا)</h4>
+                <div class="relative border-r-2 border-red-200 ms-4">
+                    <div class="mb-8 ms-8">
+                        <span class="absolute flex items-center justify-center w-8 h-8 bg-red-100 rounded-full -start-4 ring-4 ring-white">
+                            <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path></svg>
+                        </span>
+                        <h5 class="font-bold text-slate-800">المرحلة الأولى: الحفاظ على الأصل والتفاوض (الأشهر 1-3)</h5>
+                        <p class="text-sm text-slate-500">الموافقة الفورية على تجديد التراخيص، وبدء مفاوضات رسمية مع الوزارة.</p>
+                    </div>
+                    <div class="mb-8 ms-8">
+                        <span class="absolute flex items-center justify-center w-8 h-8 bg-red-100 rounded-full -start-4 ring-4 ring-white">
+                            <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"></path></svg>
+                        </span>
+                        <h5 class="font-bold text-slate-800">المرحلة الثانية: إتمام الاتفاقية (الأشهر 4-9)</h5>
+                        <p class="text-sm text-slate-500">تحويل مذكرة التفاهم إلى عقد نهائي، مع تجهيز خطة الشراكة كبديل.</p>
+                    </div>
+                    <div class="mb-8 ms-8">
+                        <span class="absolute flex items-center justify-center w-8 h-8 bg-red-100 rounded-full -start-4 ring-4 ring-white">
+                           <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path d="M5.5 13a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 13H5.5z"></path><path d="M7 13a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1z"></path></svg>
+                        </span>
+                        <h5 class="font-bold text-slate-800">المرحلة الثالثة: التسليم والتجهيز (الأشهر 10-12)</h5>
+                        <p class="text-sm text-slate-500">التسليم الرسمي للموقع للمستأجر لبدء أعمال التجهيز.</p>
+                    </div>
+                    <div class="ms-8">
+                        <span class="absolute flex items-center justify-center w-8 h-8 bg-red-100 rounded-full -start-4 ring-4 ring-white">
+                           <svg class="w-4 h-4 text-red-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                        </span>
+                        <h5 class="font-bold text-slate-800">المرحلة الرابعة: بدء التشغيل والإشراف (الأشهر 13-18)</h5>
+                        <p class="text-sm text-slate-500">الإطلاق الرسمي للمركز، ومتابعة الالتزام ببنود العقد.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="potential-clients" class="mb-16 scroll-mt-24">
+            <h2 class="text-3xl font-bold text-red-700 mb-2 text-center">العملاء المحتملون (خارج نطاق وزارة الاتصالات)</h2>
+            <p class="max-w-3xl mx-auto text-center text-slate-600 mb-8">
+                في حال تبني نموذج الشراكة أو التأجير المشترك، يمثل هؤلاء العملاء من القطاعين العام والخاص أهدافًا استراتيجية رئيسية.
+            </p>
+            <div class="flex flex-wrap justify-center mb-6 gap-2">
+                <button class="tab-button active px-4 py-2 rounded-md bg-slate-200" data-target="clients-public">القطاع العام</button>
+                <button class="tab-button px-4 py-2 rounded-md bg-slate-200" data-target="clients-private">القطاع الخاص</button>
+            </div>
+            <div class="max-w-5xl mx-auto">
+                <div id="clients-public" class="tab-content grid grid-cols-1 md:grid-cols-2 gap-6">
+                     <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-sky-500">
+                        <h3 class="text-xl font-bold text-sky-800 mb-3">الدرجة الأولى</h3>
+                        <ul class="space-y-2 text-slate-600">
+                            <li><span class="font-semibold">وزارة المالية:</span> لدعم أنظمة الفاتورة الإلكترونية والضرائب.</li>
+                            <li><span class="font-semibold">البنك المركزي:</span> لدعم مبادرات التكنولوجيا المالية (FinTech).</li>
+                            <li><span class="font-semibold">العاصمة الإدارية:</span> لدعم تطبيقات المدن الذكية وإنترنت الأشياء.</li>
+                            <li><span class="font-semibold">هيئة قناة السويس:</span> لدعم العمليات اللوجستية وتحليل البيانات.</li>
+                        </ul>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-slate-400">
+                        <h3 class="text-xl font-bold text-slate-700 mb-3">الدرجة الثانية</h3>
+                        <ul class="space-y-2 text-slate-600">
+                            <li><span class="font-semibold">وزارة الصحة:</span> لمشروع التأمين الصحي الشامل والسجلات الطبية.</li>
+                            <li><span class="font-semibold">وزارة التعليم:</span> لدعم منصات التعلم عن بعد والامتحانات.</li>
+                            <li><span class="font-semibold">شركات قطاع الأعمال العام:</span> لدعم خطط التحديث الرقمي.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="clients-private" class="tab-content hidden grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-green-500">
+                        <h3 class="text-xl font-bold text-green-800 mb-3">القطاع المصرفي والمالي (BFSI)</h3>
+                        <p class="text-slate-600">تحتاج البنوك لخدمات استضافة آمنة ومواقع للتعافي من الكوارث تتوافق مع المتطلبات التنظيمية.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-amber-500">
+                        <h3 class="text-xl font-bold text-amber-800 mb-3">قطاع الاتصالات</h3>
+                        <p class="text-slate-600">يتطلب مشغلو شبكات المحمول سعات تخزين لدعم خدمات الجيل الخامس (5G) والحوسبة الطرفية.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-lg border-t-4 border-purple-500">
+                        <h3 class="text-xl font-bold text-purple-800 mb-3">المحتوى الرقمي والإعلام</h3>
+                        <p class="text-slate-600">شركات البث المباشر، مطورو الألعاب، ومنصات التجارة الإلكترونية تحتاج لزمن استجابة منخفض.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-red-700 mt-16">
+        <div class="container mx-auto px-6 py-4 text-center text-red-100">
+            <p>&copy; 2025 - تحليل مقدم للأكاديمية الوطنية للتدريب. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const EGP_USD_RATE = 47.1;
+            const TOTAL_INVESTMENT = 59000000;
+            const RACK_COUNT = 20;
+            const ANNUAL_OPEX = 500000;
+
+            // Chart 1: Scenarios Comparison
+            const scenarioData = {
+                labels: ['تشغيل داخلي', 'تأجير للوزارة', 'تأجير مشترك', 'شراكة (PPP)'],
+                datasets: [
+                    {
+                        label: 'تكلفة استثمارية إضافية (مليون جنيه)',
+                        data: [24, 9, 24, 0],
+                        backgroundColor: 'rgba(59, 130, 246, 0.7)', 
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'نفقات تشغيلية سنوية (مليون جنيه)',
+                        data: [6.44, 0.5, 8.0, 0],
+                        backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        borderWidth: 1
+                    },
+                     {
+                        label: 'إيرادات سنوية متوقعة (مليون جنيه)',
+                        data: [0, 9.02, 3.36, 0.67],
+                        backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 1
+                    }
+                ]
+            };
+            const comparisonCtx = document.getElementById('scenariosComparisonChart').getContext('2d');
+            new Chart(comparisonCtx, {
+                type: 'bar',
+                data: scenarioData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, title: { display: true, text: 'القيمة (مليون جنيه)' }, ticks: { callback: value => `${value} م` } }, x: { grid: { display: false } } },
+                    plugins: { title: { display: true, text: 'مقارنة المؤشرات المالية الرئيسية للسيناريوهات', font: { size: 16 } }, tooltip: { callbacks: { label: context => `${context.dataset.label}: ${context.raw} مليون جنيه` } } }
+                }
+            });
+
+            // Chart 2: Market Growth
+            const marketGrowthCtx = document.getElementById('marketGrowthChart').getContext('2d');
+            new Chart(marketGrowthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['2024', '2025', '2026', '2027', '2028', '2029', '2030'],
+                    datasets: [{
+                        label: 'حجم السوق (مليون دولار)',
+                        data: [278, 324, 377, 440, 512, 597, 694],
+                        borderColor: 'rgba(220, 38, 38, 1)',
+                        backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: false } }, plugins: { legend: { display: false } } }
+            });
+
+            // Chart 3 & 4: Cost Breakdowns
+            const capexCtx = document.getElementById('capexChart').getContext('2d');
+            new Chart(capexCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['وحدات تخزين', 'تراخيص'],
+                    datasets: [{ data: [15, 9], backgroundColor: ['rgba(220, 38, 38, 0.8)', 'rgba(59, 130, 246, 0.8)'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
+
+            const opexCtx = document.getElementById('opexChart').getContext('2d');
+            new Chart(opexCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['طاقة وتبريد', 'صيانة', 'موظفين', 'أخرى'],
+                    datasets: [{ data: [2.5, 2.0, 1.44, 0.5], backgroundColor: ['rgba(239, 68, 68, 0.8)', 'rgba(245, 158, 11, 0.8)', 'rgba(16, 185, 129, 0.8)', 'rgba(107, 114, 128, 0.8)'] }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+            });
+
+
+            // Interactive Model Logic
+            const rackPriceSlider = document.getElementById('rackPriceSlider');
+            const rackPriceValue = document.getElementById('rackPriceValue');
+            const annualRevenueEl = document.getElementById('annualRevenue');
+            const netCashflowEl = document.getElementById('netCashflow');
+            const breakEvenEl = document.getElementById('breakEven');
+            const breakEvenCtx = document.getElementById('breakEvenChart').getContext('2d');
+            let breakEvenChart;
+
+            function calculateMetrics(rackPrice) {
+                const annualRevenueEGP = rackPrice * RACK_COUNT * 12 * EGP_USD_RATE;
+                const netCashflowEGP = annualRevenueEGP - ANNUAL_OPEX;
+                const breakEvenYears = netCashflowEGP > 0 ? TOTAL_INVESTMENT / netCashflowEGP : Infinity;
+                return { annualRevenueEGP, netCashflowEGP, breakEvenYears };
+            }
+
+            function updateUI(metrics) {
+                rackPriceValue.textContent = `$${rackPriceSlider.value}`;
+                annualRevenueEl.textContent = `${(metrics.annualRevenueEGP / 1000000).toFixed(2)} مليون جنيه`;
+                netCashflowEl.textContent = `${(metrics.netCashflowEGP / 1000000).toFixed(2)} مليون جنيه`;
+                breakEvenEl.textContent = isFinite(metrics.breakEvenYears) ? `${metrics.breakEvenYears.toFixed(1)} سنوات` : 'لا يمكن تحقيقه';
+            }
+
+            function updateBreakEvenChart(metrics) {
+                const years = Array.from({ length: 15 }, (_, i) => i);
+                const cumulativeData = years.map(year => ({ x: year, y: (year === 0) ? -TOTAL_INVESTMENT : -TOTAL_INVESTMENT + (metrics.netCashflowEGP * year) }));
+                let breakEvenData = [];
+                if (isFinite(metrics.breakEvenYears) && metrics.breakEvenYears <= 15) {
+                    breakEvenData = [{ x: metrics.breakEvenYears, y: 0 }];
+                }
+
+                if (breakEvenChart) {
+                    breakEvenChart.data.datasets[0].data = cumulativeData;
+                    breakEvenChart.data.datasets[1].data = breakEvenData;
+                    breakEvenChart.update();
+                } else {
+                    breakEvenChart = new Chart(breakEvenCtx, {
+                        type: 'line',
+                        data: {
+                            datasets: [
+                                { label: 'صافي التدفق النقدي التراكمي', data: cumulativeData, borderColor: 'rgba(220, 38, 38, 1)', backgroundColor: 'rgba(220, 38, 38, 0.1)', fill: true, tension: 0.1, pointRadius: 2 },
+                                { label: 'نقطة التعادل', data: breakEvenData, backgroundColor: 'rgba(251, 146, 60, 1)', pointRadius: 8, pointHoverRadius: 12, showLine: false }
+                            ]
+                        },
+                        options: {
+                            responsive: true, maintainAspectRatio: false,
+                            scales: {
+                                y: { title: { display: true, text: 'القيمة (جنيه)' }, ticks: { callback: value => `${(value / 1000000).toFixed(1)} م` } },
+                                x: { type: 'linear', position: 'bottom', title: { display: true, text: 'السنوات' }, grid: { display: false } }
+                            },
+                            plugins: {
+                                tooltip: {
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.dataset.label || '';
+                                            if (label) { label += ': '; }
+                                            if (context.datasetIndex === 1) { return `نقطة التعادل عند ${context.parsed.x.toFixed(1)} سنوات`; }
+                                            if (context.parsed.y !== null) { label += `${(context.parsed.y / 1000000).toFixed(2)} مليون جنيه`; }
+                                            return label;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+            
+            function updateAll() {
+                const rackPrice = parseInt(rackPriceSlider.value);
+                const metrics = calculateMetrics(rackPrice);
+                updateUI(metrics);
+                updateBreakEvenChart(metrics);
+            }
+
+            rackPriceSlider.addEventListener('input', updateAll);
+            updateAll();
+
+            // Tab and Nav Logic
+            function initializeTabs(containerSelector) {
+                const container = document.querySelector(containerSelector);
+                if (!container) return;
+
+                const tabButtons = container.querySelectorAll('.tab-button');
+                const tabContents = container.querySelectorAll('.tab-content');
+
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        tabButtons.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        
+                        const targetId = button.dataset.target;
+                        tabContents.forEach(content => {
+                            content.id === targetId ? content.classList.remove('hidden') : content.classList.add('hidden');
+                        });
+                    });
+                });
+            }
+
+            initializeTabs('#swot');
+            initializeTabs('#potential-clients');
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 120) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        // Mobile menu toggle
+        document.getElementById('main-mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('main-mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

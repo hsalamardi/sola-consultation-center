@@ -80,76 +80,258 @@
         ::-webkit-scrollbar-thumb:hover { background: #8A6F4A; }
     </style>
 </head>
-<body class="bg-primary">
+<body class="bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
 
-    <div class="flex flex-col md:flex-row">
-        <!-- Sidebar Navigation -->
-        <aside class="w-full md:w-64 bg-secondary p-4 md:h-screen md:sticky top-0 shadow-lg">
-            <h1 class="text-2xl font-bold text-header mb-6 text-center">مصر الرقمية</h1>
-            <nav>
-                <ul class="space-y-2">
-                    <li><a href="#hero" class="block py-2 px-4 rounded hover:bg-accent hover:text-white transition-colors">نظرة عامة</a></li>
-                    <li><a href="#tech" class="block py-2 px-4 rounded hover:bg-accent hover:text-white transition-colors">التقنيات الأساسية</a></li>
-                    <li><a href="#sectors" class="block py-2 px-4 rounded hover:bg-accent hover:text-white transition-colors">التطبيقات القطاعية</a></li>
-                    <li><a href="#roadmap" class="block py-2 px-4 rounded hover:bg-accent hover:text-white transition-colors">خارطة الطريق</a></li>
-                    <li><a href="#matrix" class="block py-2 px-4 rounded hover:bg-accent hover:text-white transition-colors">مصفوفة الأولويات</a></li>
-                    <li><a href="#swot" class="block py-2 px-4 rounded hover:bg-accent hover:text-white transition-colors">التحليل الاستراتيجي</a></li>
-                </ul>
-            </nav>
-        </aside>
+    <!-- Main Navigation Header -->
+    <nav class="bg-gradient-to-r from-slate-800 to-slate-900 shadow-2xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo and Brand -->
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <div class="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1 class="text-white font-bold text-lg leading-tight">الأكاديمية الوطنية للتدريب</h1>
+                        <p class="text-red-400 text-sm font-medium">الاستشارات التقنية</p>
+                    </div>
+                </div>
+                
+                <!-- Main Navigation Links -->
+                <div class="hidden md:flex items-center space-x-reverse space-x-6">
+                    <a href="index.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                        </svg>
+                        <span class="font-medium">الرئيسية</span>
+                    </a>
+                    <a href="ai.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-white bg-red-600 rounded-lg shadow-lg">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                        <span class="font-semibold">الذكاء الاصطناعي</span>
+                    </a>
+                    <a href="Cert.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                        </svg>
+                        <span class="font-medium">الشهادات</span>
+                    </a>
+                    <a href="data.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                        </svg>
+                        <span class="font-medium">مركز البيانات</span>
+                    </a>
+                    <a href="infra.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path>
+                        </svg>
+                        <span class="font-medium">البنية التحتية</span>
+                    </a>
+                    <a href="init.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <span class="font-medium">المبادرات</span>
+                    </a>
+                    <a href="software.html" class="flex items-center space-x-2 space-x-reverse px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-lg transition-all duration-200 group">
+                        <svg class="w-4 h-4 text-slate-400 group-hover:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                        </svg>
+                        <span class="font-medium">البرمجيات</span>
+                    </a>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-slate-300 hover:text-white focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-slate-800 border-t border-slate-700">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">الرئيسية</a>
+                <a href="ai.html" class="block px-3 py-2 text-white bg-red-600 rounded-md font-semibold">الذكاء الاصطناعي</a>
+                <a href="Cert.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">الشهادات</a>
+                <a href="data.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">مركز البيانات</a>
+                <a href="infra.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">البنية التحتية</a>
+                <a href="init.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">المبادرات</a>
+                <a href="software.html" class="block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md">البرمجيات</a>
+            </div>
+        </div>
+    </nav>
 
-        <!-- Main Content -->
-        <main class="flex-1 p-6 md:p-10">
+    <!-- Page Navigation Header -->
+    <div class="bg-white/95 backdrop-blur-sm shadow-lg border-b border-slate-200 sticky top-16 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-14">
+                <!-- Page Title -->
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <div class="w-8 h-8 bg-gradient-to-br from-red-500 to-orange-500 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-800">الذكاء الاصطناعي</h2>
+                        <p class="text-slate-500 text-xs">استراتيجية التحول الرقمي</p>
+                    </div>
+                </div>
+                
+                <!-- Page Navigation Links -->
+                <nav class="hidden lg:flex items-center space-x-reverse space-x-6">
+                    <a href="#hero" class="text-slate-600 hover:text-red-600 px-3 py-2 rounded-lg hover:bg-red-50 transition-all duration-200 text-sm font-medium">نظرة عامة</a>
+                    <a href="#tech" class="text-slate-600 hover:text-red-600 px-3 py-2 rounded-lg hover:bg-red-50 transition-all duration-200 text-sm font-medium">التقنيات الأساسية</a>
+                    <a href="#sectors" class="text-slate-600 hover:text-red-600 px-3 py-2 rounded-lg hover:bg-red-50 transition-all duration-200 text-sm font-medium">التطبيقات القطاعية</a>
+                    <a href="#roadmap" class="text-slate-600 hover:text-red-600 px-3 py-2 rounded-lg hover:bg-red-50 transition-all duration-200 text-sm font-medium">خارطة الطريق</a>
+                    <a href="#matrix" class="text-slate-600 hover:text-red-600 px-3 py-2 rounded-lg hover:bg-red-50 transition-all duration-200 text-sm font-medium">مصفوفة الأولويات</a>
+                    <a href="#swot" class="text-slate-600 hover:text-red-600 px-3 py-2 rounded-lg hover:bg-red-50 transition-all duration-200 text-sm font-medium">التحليل الاستراتيجي</a>
+                </nav>
+                
+                <!-- Mobile page menu button -->
+                <div class="lg:hidden">
+                    <button id="page-mobile-menu-button" class="text-slate-600 hover:text-red-600 focus:outline-none">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile page navigation -->
+        <div id="page-mobile-menu" class="lg:hidden hidden bg-white border-t border-slate-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#hero" class="block px-3 py-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-md text-sm">نظرة عامة</a>
+                <a href="#tech" class="block px-3 py-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-md text-sm">التقنيات الأساسية</a>
+                <a href="#sectors" class="block px-3 py-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-md text-sm">التطبيقات القطاعية</a>
+                <a href="#roadmap" class="block px-3 py-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-md text-sm">خارطة الطريق</a>
+                <a href="#matrix" class="block px-3 py-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-md text-sm">مصفوفة الأولويات</a>
+                <a href="#swot" class="block px-3 py-2 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-md text-sm">التحليل الاستراتيجي</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+            <!-- Main Content -->
+            <main class="flex-1 overflow-y-auto bg-white">
+                <div class="p-8 lg:p-12 max-w-6xl mx-auto">
             <!-- Hero Section -->
-            <section id="hero" class="text-center mb-16">
-                <h2 class="text-4xl font-bold text-header mb-4">استراتيجية الذكاء الاصطناعي للقطاع العام المصري</h2>
-                <p class="text-lg text-body max-w-3xl mx-auto">
-                    تحليل تفاعلي للمقترحات الهادفة إلى توظيف الذكاء الاصطناعي لتحسين الخدمات الحكومية وتعزيز الكفاءة، بما يتماشى مع رؤية مصر 2030 والاستراتيجية الوطنية للذكاء الاصطناعي.
-                </p>
+            <section id="hero" class="mb-20">
+                <div class="bg-gradient-to-r from-red-600 to-orange-600 rounded-2xl p-8 lg:p-12 text-white shadow-2xl">
+                    <div class="flex items-center space-x-4 space-x-reverse mb-6">
+                        <div class="w-16 h-16 bg-white/20 rounded-xl flex items-center justify-center">
+                            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-4xl lg:text-5xl font-bold mb-2">استراتيجية الذكاء الاصطناعي</h1>
+                            <p class="text-red-100 text-lg">الاستشارات التقنية للتحول الرقمي</p>
+                        </div>
+                    </div>
+                    <p class="text-xl leading-relaxed text-red-50 max-w-4xl">
+                        تحليل تفاعلي شامل للمقترحات الهادفة إلى توظيف الذكاء الاصطناعي لتحسين الخدمات الحكومية وتعزيز الكفاءة التشغيلية، بما يتماشى مع رؤية مصر 2030 والاستراتيجية الوطنية للذكاء الاصطناعي.
+                    </p>
+                    <div class="mt-8 flex flex-wrap gap-4 items-center">
+                        <div class="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
+                            <span class="text-white/90 text-sm font-medium">6 تقنيات أساسية</span>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
+                            <span class="text-white/90 text-sm font-medium">5 قطاعات حيوية</span>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2">
+                            <span class="text-white/90 text-sm font-medium">رؤية 2030</span>
+                        </div>
+                        <a href="ai.pdf" download class="bg-white hover:bg-gray-100 text-red-600 font-semibold px-6 py-3 rounded-lg transition-all duration-200 flex items-center space-x-2 space-x-reverse shadow-lg hover:shadow-xl">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <span>تحميل التقرير PDF</span>
+                        </a>
+                    </div>
+                </div>
             </section>
 
             <!-- Core Technologies Section -->
-            <section id="tech" class="mb-16">
-                <h3 class="text-3xl font-bold text-header mb-8 text-center">التقنيات الأساسية المقترحة</h3>
-                <p class="text-center text-body mb-8 max-w-2xl mx-auto">
-                    تعتمد الاستراتيجية المقترحة على حزمة متكاملة من التقنيات المتقدمة المتخصصة في اللغة العربية، والتي تشكل حجر الزاوية في تحويل الخدمات الحكومية. استكشف كل تقنية لمعرفة دورها المحوري.
-                </p>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <section id="tech" class="mb-20">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl lg:text-4xl font-bold text-slate-800 mb-4">التقنيات الأساسية المقترحة</h2>
+                    <p class="text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
+                        تعتمد الاستراتيجية المقترحة على حزمة متكاملة من التقنيات المتقدمة المتخصصة في اللغة العربية، والتي تشكل حجر الزاوية في تحويل الخدمات الحكومية. استكشف كل تقنية لمعرفة دورها المحوري.
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Tech Card -->
-                    <div class="card p-6 text-center">
-                        <div class="text-4xl mb-4">📄</div>
-                        <h4 class="text-xl font-bold text-header mb-2">التعرف الضوئي (OCR)</h4>
-                        <p class="text-body">رقمنة الوثائق الورقية والمخطوطات التاريخية لتحويلها إلى بيانات قابلة للبحث والتحليل.</p>
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-100 group hover:-translate-y-2">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-800 mb-3">التعرف الضوئي (OCR)</h4>
+                        <p class="text-slate-600 leading-relaxed">رقمنة الوثائق الورقية والمخطوطات التاريخية لتحويلها إلى بيانات قابلة للبحث والتحليل.</p>
                     </div>
                     <!-- Tech Card -->
-                    <div class="card p-6 text-center">
-                        <div class="text-4xl mb-4">🎙️</div>
-                        <h4 class="text-xl font-bold text-header mb-2">تحويل الكلام لنص (ASR)</h4>
-                        <p class="text-body">أتمتة تفريغ المحاضرات والملاحظات الطبية والشكاوى الصوتية، مما يوفر الوقت ويزيد الدقة.</p>
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-100 group hover:-translate-y-2">
+                        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-800 mb-3">تحويل الكلام لنص (ASR)</h4>
+                        <p class="text-slate-600 leading-relaxed">أتمتة تفريغ المحاضرات والملاحظات الطبية والشكاوى الصوتية، مما يوفر الوقت ويزيد الدقة.</p>
                     </div>
                     <!-- Tech Card -->
-                    <div class="card p-6 text-center">
-                        <div class="text-4xl mb-4">🔊</div>
-                        <h4 class="text-xl font-bold text-header mb-2">تحويل النص لكلام (TTS)</h4>
-                        <p class="text-body">إنشاء واجهات صوتية للخدمات الحكومية لدعم ضعاف البصر وتجاوز حواجز الأمية الرقمية.</p>
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-100 group hover:-translate-y-2">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-800 mb-3">تحويل النص لكلام (TTS)</h4>
+                        <p class="text-slate-600 leading-relaxed">إنشاء واجهات صوتية للخدمات الحكومية لدعم ضعاف البصر وتجاوز حواجز الأمية الرقمية.</p>
                     </div>
                     <!-- Tech Card -->
-                    <div class="card p-6 text-center">
-                        <div class="text-4xl mb-4">🔍</div>
-                        <h4 class="text-xl font-bold text-header mb-2">الاسترجاع المعزز (RAG)</h4>
-                        <p class="text-body">بناء أنظمة أسئلة وأجوبة ذكية تستمد معلوماتها من مصادر موثوقة كالقوانين والمناهج الدراسية.</p>
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-100 group hover:-translate-y-2">
+                        <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-800 mb-3">الاسترجاع المعزز (RAG)</h4>
+                        <p class="text-slate-600 leading-relaxed">بناء أنظمة أسئلة وأجوبة ذكية تستمد معلوماتها من مصادر موثوقة كالقوانين والمناهج الدراسية.</p>
                     </div>
                     <!-- Tech Card -->
-                    <div class="card p-6 text-center">
-                        <div class="text-4xl mb-4">🤖</div>
-                        <h4 class="text-xl font-bold text-header mb-2">روبوتات المحادثة</h4>
-                        <p class="text-body">تقديم خدمات آلية للمواطنين والموظفين على مدار الساعة للإجابة الفورية على الاستفسارات.</p>
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-100 group hover:-translate-y-2">
+                        <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-800 mb-3">روبوتات المحادثة</h4>
+                        <p class="text-slate-600 leading-relaxed">تقديم خدمات آلية للمواطنين والموظفين على مدار الساعة للإجابة الفورية على الاستفسارات.</p>
                     </div>
                     <!-- Tech Card -->
-                    <div class="card p-6 text-center">
-                        <div class="text-4xl mb-4">🖋️</div>
-                        <h4 class="text-xl font-bold text-header mb-2">التشكيل الآلي</h4>
-                        <p class="text-body">إضافة الدقة للنصوص العربية التعليمية والتراثية لضمان النطق السليم وتعزيز جودة المحتوى الرقمي.</p>
+                    <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-100 group hover:-translate-y-2">
+                        <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center mb-4 mx-auto group-hover:scale-110 transition-transform duration-300">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-800 mb-3">التشكيل الآلي</h4>
+                        <p class="text-slate-600 leading-relaxed">إضافة الدقة للنصوص العربية التعليمية والتراثية لضمان النطق السليم وتعزيز جودة المحتوى الرقمي.</p>
                     </div>
                 </div>
             </section>
@@ -212,7 +394,7 @@
                                 <h4 class="text-xl font-bold text-header">المرحلة الثالثة: التحول والابتكار (السنتان 4-5)</h4>
                                 <p class="text-body mt-2">
                                     - دمج التحليلات القائمة على الذكاء الاصطناعي في عمليات صنع القرار. <br>
-                                    - إطلاق منصات متقدمة موجهة للمواطن مثل البوابة الصوتية الموحدة لـ "مصر الرقمية". <br>
+                                    - إطلاق منصات متقدمة موجهة للمواطن مثل البوابة الصوتية الموحدة لـ "الأكاديمية الوطنية للتدريب: الاستشارات التقنية". <br>
                                     - تأسيس مركز تميز وطني لمعالجة اللغة العربية الطبيعية.
                                 </p>
                             </div>
@@ -277,7 +459,7 @@
                     </div>
                 </div>
             </section>
-        </main>
+        </div>
     </div>
 
     <script>
@@ -286,7 +468,7 @@
             const initiativesData = [
                 { category: 'gov', title: 'رقمنة وثائق الهوية', description: 'استخدام OCR لرقمنة بطاقات الهوية وجوازات السفر لتسريع المعاملات.', icon: '🆔' },
                 { category: 'gov', title: 'المساعد الذكي للخدمة المدنية', description: 'تطوير روبوت محادثة (Chatbot) للرد على استفسارات الموظفين حول القوانين.', icon: '💬' },
-                { category: 'gov', title: 'بوابة "مصر الرقمية" الصوتية', description: 'إنشاء منصة خدمات موحدة بواجهة صوتية (ASR/TTS) لتسهيل الوصول.', icon: '🗣️' },
+                { category: 'gov', title: 'بوابة "الأكاديمية الوطنية للتدريب: الاستشارات التقنية" الصوتية', description: 'إنشاء منصة خدمات موحدة بواجهة صوتية (ASR/TTS) لتسهيل الوصول.', icon: '🗣️' },
                 { category: 'edu', title: 'رقمنة وتشكيل المناهج', description: 'استخدام OCR والتشكيل الآلي لإنشاء مناهج رقمية دقيقة لغويًا.', icon: '📚' },
                 { category: 'edu', title: 'قارئ الكتب الناطق', description: 'تطوير أداة TTS لدعم الطلاب ذوي الإعاقات البصرية وصعوبات التعلم.', icon: '📖' },
                 { category: 'edu', title: 'أرشفة ذكية للأبحاث', description: 'إنشاء أرشيف ذكي للرسائل العلمية باستخدام OCR وبوابة بحث متقدمة.', icon: '🔬' },
@@ -423,5 +605,19 @@
             });
         });
     </script>
-</body>
+
+        <script>
+            // Mobile menu toggle for main navigation
+            document.getElementById('mobile-menu-button').addEventListener('click', function() {
+                const mobileMenu = document.getElementById('mobile-menu');
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // Mobile menu toggle for page navigation
+            document.getElementById('page-mobile-menu-button').addEventListener('click', function() {
+                const pageMobileMenu = document.getElementById('page-mobile-menu');
+                pageMobileMenu.classList.toggle('hidden');
+            });
+        </script>
+    </body>
 </html>
